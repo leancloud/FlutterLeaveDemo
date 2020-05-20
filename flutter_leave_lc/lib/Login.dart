@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Leave.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -79,6 +80,8 @@ class _LoginPageState extends State<LoginPage> {
               _formKey.currentState.save();
               //TODO 执行登录方法
               print('email:$_email , assword:$_password');
+              //不再返回登录页面
+              Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context) => new LeavePage()), (_)=>false);
             }
           },
           shape: StadiumBorder(side: BorderSide()),

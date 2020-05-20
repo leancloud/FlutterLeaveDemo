@@ -10,10 +10,12 @@ void main(){
 }
 
 //Future<LCObject> saveLeaving() async {
+
 //  LeanCloud.initialize(
 //      'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
 //      server: 'https://elawfuk8.lc-cn-n1-shared.com',
 //      queryCache: new LCQueryCache());
+
 //  try {
 //    LCUser user = LCUser();
 //    user.username = 'Tom';
@@ -24,16 +26,15 @@ void main(){
 //  } on LCException catch (e) {
 //    print('${e.code} : ${e.message}');
 //  }
-  //今天下午要看完wigteUI+交互
 
-//  try {
 //    // 登录成功
 //    LCUser user = await LCUser.login('Tom', '123');
 //  } on LCException catch (e) {
 //    // 登录失败（可能是密码错误）
 //    print('${e.code} : ${e.message}');
 //  }
-//
+
+
 //  LCUser currentUser = await LCUser.getCurrent();
 ////  // 构建对象
 ////  LCObject todo = LCObject("Leave");
@@ -45,6 +46,7 @@ void main(){
 ////  await todo.save();
 //  return todo;
 //}
+
 
 //class MyApp extends StatelessWidget {
 //  @override
@@ -77,3 +79,6 @@ void main(){
 //    );
 //  }
 //}
+
+
+
