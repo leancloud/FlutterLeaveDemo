@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             )));
   }
-
   Align buildRegisterText(BuildContext context) {
     return Align(
       alignment: Alignment.center,
@@ -54,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               onTap: () {
                 //TODO 跳转到注册页面
                 print('去注册');
-                Navigator.pop(context);
+//                Navigator.pop(context);
               },
             ),
           ],
@@ -81,7 +80,11 @@ class _LoginPageState extends State<LoginPage> {
               //TODO 执行登录方法
               print('email:$_email , assword:$_password');
               //不再返回登录页面
-              Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context) => new LeavePage()), (_)=>false);
+              Navigator.pushAndRemoveUntil(context, new MaterialPageRoute(builder: (context) =>  LeavePage()), (_)=>false);
+//              Navigator.push(
+//                context,
+//                new MaterialPageRoute(builder: (context) => new LeavePage()),
+//              );
             }
           },
           shape: StadiumBorder(side: BorderSide()),

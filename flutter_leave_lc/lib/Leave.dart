@@ -1,181 +1,268 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:leancloud_storage/leancloud.dart';
+import 'package:date_format/date_format.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LeavePage extends StatefulWidget {
   LeavePage({Key key}) : super(key: key);
-  @override
-  State<StatefulWidget> createState() => _LeavePageState();
+  _LeavePageState createState() => _LeavePageState();
 }
 
-const String MIN_DATETIME = '2010-05-12';
-const String MAX_DATETIME = '2021-11-25';
-const String INIT_DATETIME = '2019-05-17';
-const String DATE_FORMAT = 'MM月|d日,yyyy年';
+enum DateType { startDateType, endDateType }
 
 class _LeavePageState extends State<LeavePage> {
-  DateTime _dateTime;
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now();
+  String _dropdownStartTime = 'AM';
+  String _dropdownEndTime = 'AM';
+  String _leaveType = '带薪休假或事假';
+  final TextEditingController _controller = new TextEditingController();
+  //_controller.text 就是请假原因
+//  _LeavePageState() {
+////    print(this._startDate);
+////    print('时间戳: ${this._startDate.millisecondsSinceEpoch}');
+////    print(DateTime.fromMillisecondsSinceEpoch(
+////        this._startDate.millisecondsSinceEpoch));
+//  }
 
-  @override
-  void initState() {
-    super.initState();
-    _dateTime = DateTime.parse(INIT_DATETIME);
+  String _formatDate(DateType type) {
+    switch (type) {
+      case DateType.startDateType:
+        if (this._startDate != null) {
+          return formatDate(this._startDate, ['yyyy', '-', 'mm', '-', 'dd']);
+        } else {
+          this._startDate = DateTime.now();
+          return '还未选择';
+        }
+        break;
+      case DateType.endDateType:
+        if (this._endDate != null) {
+          return formatDate(this._endDate, ['yyyy', '-', 'mm', '-', 'dd']);
+        } else {
+          this._endDate = DateTime.now();
+          return '还未选择';
+        }
+        break;
+    }
+  }
+
+  //调起日期选择器
+  void _showDatePicker() async {
+    // 第二种方式：async+await
+    //await的作用是等待异步方法showDatePicker执行完毕之后获取返回值
+    var result = await showDatePicker(
+      context: context,
+      initialDate: this._startDate, //选中的日期
+      firstDate: DateTime(1980), //日期选择器上可选择的最早日期
+      lastDate: DateTime(2100),
+    );
+    //将选中的值传递出来
+    setState(() {
+      this._startDate = result;
+    });
+  }
+
+  void saveLeaving() async {
+  LeanCloud.initialize(
+      'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
+      server: 'https://elawfuk8.lc-cn-n1-shared.com',
+      queryCache: new LCQueryCache());
+
+//  try {
+//    LCUser user = LCUser();
+//    user.username = 'Tom';
+//    user.password = '123';
+//// 设置其他属性的方法跟 LCObject 一样
+//    user['realname'] = '张三';
+//    await user.signUp();
+//  } on LCException catch (e) {
+//    print('${e.code} : ${e.message}');
+//  }
+//
+//     登录成功
+  try {
+    LCUser user = await LCUser.login('Tom', '123');
+
+    Fluttertoast.showToast(
+        msg: "请假成功",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 20.0
+    );
+  } on LCException catch(e){
+    print('${e.code} : ${e.message}');
+    Fluttertoast.showToast(
+        msg: '请假失败：${e.code} : ${e.message}',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 20.0
+    );
+  }
+
+//  LCUser currentUser = await LCUser.getCurrent();
+//  // 构建对象
+//  LCObject todo = LCObject("Leave");
+//
+//  todo['duration'] = 1;
+//  await todo.save();
+
+// 将对象保存到云端
+
+//  return todo;
   }
 
   @override
   Widget build(BuildContext context) {
-    TextStyle hintTextStyle =
-        Theme.of(context).textTheme.subhead.apply(color: Color(0xFF999999));
     return Scaffold(
-      appBar: AppBar(title: Text("DatePicker In Page")),
-      body: SingleChildScrollView(
-        decoration: BoxDecoration(color: Colors.white),
-        padding: EdgeInsets.all(16.0),
+      appBar: AppBar(title: Text("请假")),
+      body: new Container(
+        margin: const EdgeInsets.all(30.0),
         child: Column(
-            // min datetime hint
-//            Padding(
-//              padding: EdgeInsets.only(bottom: 8.0),
-//              child: Row(
-//                children: <Widget>[
-//                  Container(
-//                    width: 115.0,
-//                    child: Text('min DateTime:', style: hintTextStyle),
-//                  ),
-//                  Text(MIN_DATETIME,
-//                      style: Theme.of(context).textTheme.subhead),
-//                ],
-//              ),
-//            ),
-//            // max datetime hint
-//            Padding(
-//              padding: EdgeInsets.only(bottom: 8.0),
-//              child: Row(
-//                children: <Widget>[
-//                  Container(
-//                      width: 115.0,
-//                      child: Text('max DateTime:', style: hintTextStyle)),
-//                  Text(MAX_DATETIME,
-//                      style: Theme.of(context).textTheme.subhead),
-//                ],
-//              ),
-//            ),
-//
-//            // init datetime hint
-//            Padding(
-//              padding: EdgeInsets.only(bottom: 8.0),
-//              child: Row(
-//                children: <Widget>[
-//                  Container(
-//                    width: 115.0,
-//                    child: Text('init DateTime:', style: hintTextStyle),
-//                  ),
-//                  Text(INIT_DATETIME,
-//                      style: Theme.of(context).textTheme.subhead),
-//                ],
-//              ),
-//            ),
-//
-//            // date format
-//            Padding(
-//              padding: EdgeInsets.only(bottom: 8.0),
-//              child: Row(
-//                children: <Widget>[
-//                  Container(
-//                    width: 115.0,
-//                    child: Text('Date Format:', style: hintTextStyle),
-//                  ),
-//                  Text(DATE_FORMAT, style: Theme.of(context).textTheme.subhead),
-//                ],
-//              ),
-//            ),
-
-            // date picker theme
-//            GestureDetector(
-//              onTap: () {
-//                showDialog(
-//                  context: context,
-//                  builder: (_) => new AlertDialog(
-//                    titlePadding: EdgeInsets.only(left: 16.0, top: 16.0),
-//                    title: new Text("DateTimePickerTheme"),
-//                    contentPadding: EdgeInsets.all(16.0),
-//                    content: new Text(
-//                      '''
-//DateTimePickerTheme(
-//        backgroundColor: Color(0xFF80cbc4),
-//        cancelTextStyle: TextStyle(color: Colors.white),
-//        confirmTextStyle: TextStyle(color: Colors.black),
-//        itemTextStyle: TextStyle(color: Colors.deepOrange),
-//        pickerHeight: 300.0,
-//        titleHeight: 24.0,
-//        itemHeight: 30.0,
-//)
-//                    ''',
-//                      style: TextStyle(fontSize: 14.0),
-//                    ),
-//                    actions: <Widget>[
-//                      new FlatButton(
-//                        child: new Text("OK"),
-//                        onPressed: () {
-//                          Navigator.of(context).pop();
-//                        },
-//                      )
-//                    ],
-//                  ),
-//                );
-//              },
-//              child: Padding(
-//                padding: EdgeInsets.only(bottom: 8.0),
-//                child: Row(
-//                  children: <Widget>[
-//                    Container(
-//                      child:
-//                          Text('DateTimePickerTheme  ', style: hintTextStyle),
-//                    ),
-//                    Icon(Icons.remove_red_eye, color: Color(0xFF03a9f4)),
-//                  ],
-//                ),
-//              ),
-//            ),
-
-            // date picker widget
-            Container(
-              margin: EdgeInsets.only(top: 24.0, bottom: 40.0),
-              child: DatePickerWidget(
-                minDateTime: DateTime.parse(MIN_DATETIME),
-                maxDateTime: DateTime.parse(MAX_DATETIME),
-                initialDateTime: DateTime.parse(INIT_DATETIME),
-                dateFormat: DATE_FORMAT,
-                pickerTheme: DateTimePickerTheme(
-                  backgroundColor: Color(0xFFb2dfdb),
-                  cancelTextStyle: TextStyle(color: Colors.white),
-                  confirmTextStyle: TextStyle(color: Colors.black),
-                  itemTextStyle: TextStyle(color: Colors.deepOrange),
-                  pickerHeight: 300.0,
-                  titleHeight: 24.0,
-                  itemHeight: 30.0,
-                ),
-                onChange: (dateTime, selectedIndex) {
-                  setState(() {
-                    _dateTime = dateTime;
-                  });
-                },
-              ),
-            ),
-
-            // selected date
+//        mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Selected Date:',
-                    style: Theme.of(context).textTheme.subhead),
-                Container(
-                  padding: EdgeInsets.only(left: 12.0),
-                  child: Text(
-                    _dateTime != null
-                        ? '${_dateTime.year}-${_dateTime.month.toString().padLeft(2, '0')}-${_dateTime.day.toString().padLeft(2, '0')}'
-                        : '',
-                    style: Theme.of(context).textTheme.title,
+                Text('开始请假的日期： '),
+                InkWell(
+                  onTap: this._showDatePicker,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(this._formatDate(DateType.startDateType)),
+                      Icon(Icons.arrow_drop_down)
+                    ],
                   ),
                 ),
+                InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      DropdownButton<String>(
+                        value: this._dropdownStartTime,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            this._dropdownStartTime = newValue;
+                          });
+                        },
+                        items: <String>['AM', 'PM']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('恢复工作的日期： '),
+                InkWell(
+                  onTap: this._showDatePicker,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(this._formatDate(DateType.endDateType)),
+                      Icon(Icons.arrow_drop_down)
+                    ],
+                  ),
+                ),
+                InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      DropdownButton<String>(
+                        value: this._dropdownEndTime,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            this._dropdownEndTime = newValue;
+                          });
+                        },
+                        items: <String>['AM', 'PM']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('类型： '),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    DropdownButton<String>(
+                      value: this._leaveType,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          this._leaveType = newValue;
+                        });
+                      },
+                      items: <String>['带薪休假或事假', '病假', '婚假', '产假', '产检假', '陪产假']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+              Text('附言：  '),
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  minLines: 1,
+                  decoration: const InputDecoration(
+                    hintText: '原因及其他信息',
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    isDense: true,
+                    border: const OutlineInputBorder(
+                      gapPadding: 10,
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      borderSide: BorderSide(
+                        width: 2,
+                        style: BorderStyle.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  child: Text("保存"),
+                  onPressed: saveLeaving,
+                )
               ],
             ),
           ],
