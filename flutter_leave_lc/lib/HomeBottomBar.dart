@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapplc/Leave.dart';
+import 'package:flutterapplc/Leave/Leave.dart';
 import 'MyInformation.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'Contacts.dart';
-import 'LeaveTabBar.dart';
+import 'Leave/LeaveTabBar.dart';
 
-class ScaffoldRoute extends StatefulWidget {
+class HomeBottomBarPage extends StatefulWidget {
   @override
-  _ScaffoldRouteState createState() => _ScaffoldRouteState();
+  _HomeBottomBarPageState createState() => _HomeBottomBarPageState();
 }
 
-class _ScaffoldRouteState extends State<ScaffoldRoute> {
+class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
   int _currentIndex = 0; //记录当前选中的页面
   List<Widget> _pages = [
     LeaveTabPage(),
@@ -31,7 +31,7 @@ class _ScaffoldRouteState extends State<ScaffoldRoute> {
         ],
       ),
       drawer: new MyDrawer(), //抽屉
-      body:IndexedStack(
+      body: IndexedStack(
         index: this._currentIndex,
         children: this._pages,
       ),
@@ -49,10 +49,6 @@ class _ScaffoldRouteState extends State<ScaffoldRoute> {
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
-//      floatingActionButton: FloatingActionButton( //悬浮按钮
-//          child: Icon(Icons.add),
-//          onPressed:_onAdd
-//      ),
     );
   }
 

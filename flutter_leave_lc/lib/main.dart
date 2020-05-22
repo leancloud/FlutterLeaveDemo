@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutterapplc/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'HomeBottomBar.dart';
-void main(){
-  runApp(new MyApp());
-//  runApp(new ScaffoldRoute());
+import 'Common/Global.dart';
 
-}
+void main() => Global.init().then((e) => runApp(MyApp()));
+
 class MyApp extends StatelessWidget {
   MyApp({Key key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         const Locale.fromSubtags(languageCode: 'zh'),
         const Locale.fromSubtags(languageCode: 'en'),
       ],
-      home:ScaffoldRoute(),
+      home:HomeBottomBarPage(),
       locale: Locale('zh'),
     );
   }

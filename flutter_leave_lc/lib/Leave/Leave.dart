@@ -11,8 +11,12 @@ class LeavePage extends StatefulWidget {
 
 enum DateType { startDateType, endDateType }
 
-class _LeavePageState extends State<LeavePage>
+class _LeavePageState extends State<LeavePage>  with AutomaticKeepAliveClientMixin
 {
+  //防止 TabBar 切换后状态丢失
+  @protected
+  bool get wantKeepAlive=>true;
+
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
   String _dropdownStartTime = 'AM';
