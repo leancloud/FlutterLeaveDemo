@@ -11,20 +11,23 @@ class LeavePage extends StatefulWidget {
 
 enum DateType { startDateType, endDateType }
 
-class _LeavePageState extends State<LeavePage> {
+class _LeavePageState extends State<LeavePage>
+    with SingleTickerProviderStateMixin {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
   String _dropdownStartTime = 'AM';
   String _dropdownEndTime = 'AM';
   String _leaveType = '带薪休假或事假';
   final TextEditingController _controller = new TextEditingController();
-  //_controller.text 就是请假原因
-//  _LeavePageState() {
-////    print(this._startDate);
-////    print('时间戳: ${this._startDate.millisecondsSinceEpoch}');
-////    print(DateTime.fromMillisecondsSinceEpoch(
-////        this._startDate.millisecondsSinceEpoch));
-//  }
+
+  TabController _tabController;
+  List tabs = ["请假", "请假历史", "今日休假"];
+  @override
+  void initState() {
+    super.initState();
+    // 创建Controller
+    _tabController = TabController(length: tabs.length, vsync: this);
+  }
 
   String _formatDate(DateType type) {
     switch (type) {
@@ -64,10 +67,10 @@ class _LeavePageState extends State<LeavePage> {
   }
 
   void saveLeaving() async {
-  LeanCloud.initialize(
-      'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
-      server: 'https://elawfuk8.lc-cn-n1-shared.com',
-      queryCache: new LCQueryCache());
+    LeanCloud.initialize(
+        'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
+        server: 'https://elawfuk8.lc-cn-n1-shared.com',
+        queryCache: new LCQueryCache());
 
 //  try {
 //    LCUser user = LCUser();
@@ -81,30 +84,28 @@ class _LeavePageState extends State<LeavePage> {
 //  }
 //
 //     登录成功
-  try {
-    LCUser user = await LCUser.login('Tom', '123');
+    try {
+      LCUser user = await LCUser.login('Tom', '123');
 
-    Fluttertoast.showToast(
-        msg: "请假成功",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.blue,
-        textColor: Colors.white,
-        fontSize: 20.0
-    );
-  } on LCException catch(e){
-    print('${e.code} : ${e.message}');
-    Fluttertoast.showToast(
-        msg: '请假失败：${e.code} : ${e.message}',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 20.0
-    );
-  }
+      Fluttertoast.showToast(
+          msg: "请假成功",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blue,
+          textColor: Colors.white,
+          fontSize: 20.0);
+    } on LCException catch (e) {
+      print('${e.code} : ${e.message}');
+      Fluttertoast.showToast(
+          msg: '请假失败：${e.code} : ${e.message}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 20.0);
+    }
 
 //  LCUser currentUser = await LCUser.getCurrent();
 //  // 构建对象
@@ -121,7 +122,34 @@ class _LeavePageState extends State<LeavePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("请假")),
+      appBar: new AppBar(
+        backgroundColor: Colors.white,
+
+        elevation: 0, // 隐藏阴影
+        flexibleSpace: new Column(
+          children: <Widget>[
+            new TabBar(
+                controller: _tabController,
+                labelColor: Colors.blue,
+                 indicatorColor: Colors.blue,
+                tabs: tabs.map((e) => Tab(text: e)).toList())
+
+          ],
+        ),
+//        bottom: TabBar(
+//            //生成Tab菜单
+//            controller: _tabController,
+//            tabs: tabs.map((e) => Tab(text: e)).toList()),
+//          title: Text("请假"),
+//              actions: <Widget>[
+//      new IconButton( // action button
+//      icon: new Text('请假记录'),
+//      onPressed: () {
+//      },
+//
+//    ),
+//        ],
+      ),
       body: new Container(
         margin: const EdgeInsets.all(30.0),
         child: Column(

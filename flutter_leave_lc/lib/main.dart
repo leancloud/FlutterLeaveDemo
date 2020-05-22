@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapplc/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'HomeBottomBar.dart';
 void main(){
   runApp(new MyApp());
+//  runApp(new ScaffoldRoute());
+
 }
 class MyApp extends StatelessWidget {
   MyApp({Key key}) : super(key: key);
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
         const Locale.fromSubtags(languageCode: 'zh'),
         const Locale.fromSubtags(languageCode: 'en'),
       ],
-      home:LoginPage(),
+      home:ScaffoldRoute(),
       locale: Locale('zh'),
     );
   }
