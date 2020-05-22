@@ -3,6 +3,7 @@ import 'package:flutterapplc/Leave.dart';
 import 'MyInformation.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'Contacts.dart';
+import 'LeaveTabBar.dart';
 
 class ScaffoldRoute extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class ScaffoldRoute extends StatefulWidget {
 class _ScaffoldRouteState extends State<ScaffoldRoute> {
   int _currentIndex = 0; //记录当前选中的页面
   List<Widget> _pages = [
-    LeavePage(),
+    LeaveTabPage(),
     WeeklySummaryPage(),
     ContactsPage(),
   ];

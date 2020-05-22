@@ -12,7 +12,7 @@ class LeavePage extends StatefulWidget {
 enum DateType { startDateType, endDateType }
 
 class _LeavePageState extends State<LeavePage>
-    with SingleTickerProviderStateMixin {
+{
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
   String _dropdownStartTime = 'AM';
@@ -20,14 +20,6 @@ class _LeavePageState extends State<LeavePage>
   String _leaveType = '带薪休假或事假';
   final TextEditingController _controller = new TextEditingController();
 
-  TabController _tabController;
-  List tabs = ["请假", "请假历史", "今日休假"];
-  @override
-  void initState() {
-    super.initState();
-    // 创建Controller
-    _tabController = TabController(length: tabs.length, vsync: this);
-  }
 
   String _formatDate(DateType type) {
     switch (type) {
@@ -122,34 +114,6 @@ class _LeavePageState extends State<LeavePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        backgroundColor: Colors.white,
-
-        elevation: 0, // 隐藏阴影
-        flexibleSpace: new Column(
-          children: <Widget>[
-            new TabBar(
-                controller: _tabController,
-                labelColor: Colors.blue,
-                 indicatorColor: Colors.blue,
-                tabs: tabs.map((e) => Tab(text: e)).toList())
-
-          ],
-        ),
-//        bottom: TabBar(
-//            //生成Tab菜单
-//            controller: _tabController,
-//            tabs: tabs.map((e) => Tab(text: e)).toList()),
-//          title: Text("请假"),
-//              actions: <Widget>[
-//      new IconButton( // action button
-//      icon: new Text('请假记录'),
-//      onPressed: () {
-//      },
-//
-//    ),
-//        ],
-      ),
       body: new Container(
         margin: const EdgeInsets.all(30.0),
         child: Column(
