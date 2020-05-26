@@ -29,53 +29,44 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
             backgroundColor: Colors.blue,
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-
               itemCount: this._listSize,
               itemBuilder: (context, index) {
+
                 var _data = this._historyList[index];
-//                print(this._historyList.length);
-                print('00000000');
-
-                if (this._listSize == 0) {
-                  return Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(16.0),
-                      child: new Text(
-                        "没有请假记录",
-                        style: TextStyle(color: Colors.grey),
-                      ));
+                int _type = _data['type'];
+                String note;
+                if (_data['note'] == null) {
+                  note = '因为羞羞的原因';
                 } else {
-                  var _data = this._historyList[index];
-                  print('999999999');
+                  note = _data['note'];
+                }
 
-                  return Container(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Row(
-                      children: <Widget>[
-                        new Expanded(
-                            child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            new Container(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: new Text(
-                                '1111',
-                                style: new TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                return Container(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Row(
+                    children: <Widget>[
+                      new Expanded(
+                          child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Container(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: new Text(
+                              getVacationType(_type),
+                              style: new TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            new Text('22',
-                                //this._historyList[index]['note']
-                                style: new TextStyle(
-                                  color: Colors.grey[500],
-                                ))
-                          ],
-                        ))
-                      ],
-                    ),
-                  );
-                }
+                          ),
+                          new Text(note,
+                              style: new TextStyle(
+                                color: Colors.grey[500],
+                              ))
+                        ],
+                      ))
+                    ],
+                  ),
+                );
               },
 //              separatorBuilder: (context, index) => Divider(height: .0),
             )),
@@ -94,5 +85,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
 //        for (LCObject comment in leaves) {
 //          String post = comment['note'];
 //        }
+    //更新视图.
+    setState(() {});
   }
 }
