@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapplc/Leave/Leave.dart';
+import 'package:flutterapplc/Leave.dart';
 import 'MyInformation.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'Contacts.dart';
-import 'Leave/LeaveTabBar.dart';
+import 'LeaveTabBar.dart';
 
 class HomeBottomBarPage extends StatefulWidget {
   @override
@@ -12,11 +12,18 @@ class HomeBottomBarPage extends StatefulWidget {
 
 class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
   int _currentIndex = 0; //记录当前选中的页面
+
   List<Widget> _pages = [
     LeaveTabPage(),
     WeeklySummaryPage(),
     ContactsPage(),
   ];
+//  final _pages = [LeaveTabPage(), WeeklySummaryPage(), ContactsPage()];
+//  @override
+//  void initState() {
+//    super.initState();
+////    this._pageController = PageController(initialPage: this._currentIndex);
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +38,7 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
         ],
       ),
       drawer: new MyDrawer(), //抽屉
-      body: IndexedStack(
-        index: this._currentIndex,
-        children: this._pages,
-      ),
+      body: this._pages[this._currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         // 底部导航
         items: <BottomNavigationBarItem>[
@@ -46,17 +50,14 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
         ],
         currentIndex: this._currentIndex,
         fixedColor: Colors.blue,
-        onTap: _onItemTapped,
+        onTap: (index) {
+          setState(() {
+            //设置点击底部Tab的时候的页面跳转
+            this._currentIndex = index;
+          });
+        },
         type: BottomNavigationBarType.fixed,
       ),
     );
   }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      this._currentIndex = index;
-    });
-  }
-
-  void _onAdd() {}
 }

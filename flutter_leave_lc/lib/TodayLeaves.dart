@@ -6,9 +6,7 @@ class TodayLeavesPage extends StatefulWidget {
   _TodayLeavesPageState createState() => new _TodayLeavesPageState();
 }
 
-class _TodayLeavesPageState extends State<TodayLeavesPage>  with AutomaticKeepAliveClientMixin{
-  @protected
-  bool get wantKeepAlive=>true;
+class _TodayLeavesPageState extends State<TodayLeavesPage> {
 
   List<LCObject> _historyList ; //全部记录
   int _listSize = 0;
@@ -33,8 +31,8 @@ class _TodayLeavesPageState extends State<TodayLeavesPage>  with AutomaticKeepAl
 
         } else {
           return ListTile(
-              title: Text(this._historyList[index]['note'])
-          );
+              title: Text('qqq')
+          ); 
         }
       },
       separatorBuilder: (context, index) => Divider(height: .0),
@@ -44,7 +42,6 @@ class _TodayLeavesPageState extends State<TodayLeavesPage>  with AutomaticKeepAl
 
     LCQuery<LCObject> query = LCQuery('Leave');
     List<LCObject> leaves = await query.find();
-    print(leaves.length);
     this._historyList = leaves;
     this._listSize  =leaves.length;
 //        for (LCObject comment in leaves) {

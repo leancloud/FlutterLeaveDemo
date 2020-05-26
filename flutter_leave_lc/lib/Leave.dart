@@ -11,11 +11,11 @@ class LeavePage extends StatefulWidget {
 
 enum DateType { startDateType, endDateType }
 
-class _LeavePageState extends State<LeavePage>  with AutomaticKeepAliveClientMixin
+class _LeavePageState extends State<LeavePage>
 {
   //防止 TabBar 切换后状态丢失
-  @protected
-  bool get wantKeepAlive=>true;
+//  @override
+//  bool get wantKeepAlive => true;
 
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
@@ -44,6 +44,7 @@ class _LeavePageState extends State<LeavePage>  with AutomaticKeepAliveClientMix
         }
         break;
     }
+    return '还未选择';
   }
 
   //调起日期选择器

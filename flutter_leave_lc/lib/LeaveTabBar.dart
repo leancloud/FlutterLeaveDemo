@@ -11,7 +11,9 @@ class LeaveTabPage extends StatefulWidget {
 class _LeaveTabPageState extends State<LeaveTabPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List tabs = ["请假", "请假历史", "今日休假"];
+  int _currentIndex = 0; //选中下标
+
+  List _tabs = ["请假", "请假历史", "今日休假"];
   List<Widget> _pages = [
     LeavePage(),
     MyLeavesPage(),
@@ -25,24 +27,30 @@ class _LeaveTabPageState extends State<LeaveTabPage>
   }
 
   @override
+  void dispose() {
+    ///页面销毁时，销毁控制器
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0, // 隐藏阴影
-        flexibleSpace: new Column(
-          children: <Widget>[
-            new TabBar(
-                controller: _tabController,
-                labelColor: Colors.blue,
-                indicatorColor: Colors.blue,
-                tabs: tabs.map((e) => Tab(text: e)).toList())
-          ],
-        ),
-      ),
-      body: TabBarView(
+          backgroundColor: Colors.white,
+          elevation: 0, // 隐藏阴影
+          bottom: (new TabBar(
+              controller: this._tabController,
+              labelColor: Colors.blue,
+              indicatorColor: Colors.blue,
+              tabs: this
+                  ._tabs
+                  .map((e) => Tab(text: e))
+                  .toList()))), //  PageController _pageController;
+
+      body: new TabBarView(
         controller: _tabController,
-        children: this._pages,
+        children: _pages,
       ),
     );
   }
