@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leancloud_storage/leancloud.dart';
 import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
+import 'Common/Global.dart';
 
 class LeavePage extends StatefulWidget {
   LeavePage({Key key}) : super(key: key);
@@ -11,11 +11,7 @@ class LeavePage extends StatefulWidget {
 
 enum DateType { startDateType, endDateType }
 
-class _LeavePageState extends State<LeavePage>
-{
-  //防止 TabBar 切换后状态丢失
-//  @override
-//  bool get wantKeepAlive => true;
+class _LeavePageState extends State<LeavePage> {
 
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
@@ -23,7 +19,6 @@ class _LeavePageState extends State<LeavePage>
   String _dropdownEndTime = 'AM';
   String _leaveType = '带薪休假或事假';
   final TextEditingController _controller = new TextEditingController();
-
 
   String _formatDate(DateType type) {
     switch (type) {
@@ -64,56 +59,13 @@ class _LeavePageState extends State<LeavePage>
   }
 
   void saveLeaving() async {
-    LeanCloud.initialize(
-        'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
-        server: 'https://elawfuk8.lc-cn-n1-shared.com',
-        queryCache: new LCQueryCache());
-
-//  try {
-//    LCUser user = LCUser();
-//    user.username = 'Tom';
-//    user.password = '123';
-//// 设置其他属性的方法跟 LCObject 一样
-//    user['realname'] = '张三';
-//    await user.signUp();
-//  } on LCException catch (e) {
-//    print('${e.code} : ${e.message}');
-//  }
-//
-//     登录成功
     try {
       LCUser user = await LCUser.login('Tom', '123');
-
-      Fluttertoast.showToast(
-          msg: "请假成功",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 20.0);
+      showToast('请假成功');
     } on LCException catch (e) {
       print('${e.code} : ${e.message}');
-      Fluttertoast.showToast(
-          msg: '请假失败：${e.code} : ${e.message}',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 20.0);
+      showToast('请假失败：${e.code} : ${e.message}');
     }
-
-//  LCUser currentUser = await LCUser.getCurrent();
-//  // 构建对象
-//  LCObject todo = LCObject("Leave");
-//
-//  todo['duration'] = 1;
-//  await todo.save();
-
-// 将对象保存到云端
-
-//  return todo;
   }
 
   @override
@@ -122,7 +74,7 @@ class _LeavePageState extends State<LeavePage>
       body: new Container(
         margin: const EdgeInsets.all(30.0),
         child: Column(
-//        mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapplc/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'HomeBottomBar.dart';
 import 'Common/Global.dart';
 
 void main() => Global.init().then((e) => runApp(MyApp()));
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
         const Locale.fromSubtags(languageCode: 'zh'),
         const Locale.fromSubtags(languageCode: 'en'),
       ],
-      home:HomeBottomBarPage(),
+      home:LoginPage(),
       locale: Locale('zh'),
     );
   }
