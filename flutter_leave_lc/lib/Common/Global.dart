@@ -26,8 +26,6 @@ String getVacationType(int type) {
   return '错误的假期类型';
 }
 class Global {
-
-
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     //初始化网络请求相关配置
