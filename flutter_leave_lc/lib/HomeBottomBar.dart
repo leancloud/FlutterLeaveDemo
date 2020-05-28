@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapplc/Leave.dart';
+import 'LeavePage.dart';
 import 'MyInformation.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'Contacts.dart';

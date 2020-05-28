@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//用户注册的时候只要用户名+密码，手机号、邮箱、RealName等在个人中心自己设置
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({

@@ -37,6 +37,23 @@ void showToast (String msg){
       textColor: Colors.white,
       fontSize: 20.0);
 }
+
+class CommonUtil {
+  static Future<Null> showLoadingDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new Material(
+              color: Colors.transparent,
+              child: WillPopScope(
+                  onWillPop: () => new Future.value(false),
+                  child: Center(
+                    child: new CircularProgressIndicator(),
+                  )));
+        });
+  }
+}
+
 class Global {
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
@@ -45,6 +62,5 @@ class Global {
           'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
           server: 'https://elawfuk8.lc-cn-n1-shared.com',
           queryCache: new LCQueryCache());
-      print('init');
   }
 }

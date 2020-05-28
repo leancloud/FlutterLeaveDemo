@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
-import 'HomeBottomBar.dart';
-import 'SignUp.dart';
-import 'Common/Global.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:leancloud_storage/leancloud.dart';
+import 'Login.dart';
+import 'HomeBottomBar.dart';
+import 'Common/Global.dart';
 
-class LoginPage extends StatefulWidget {
+//用户注册的时候只要用户名+密码，手机号、邮箱、Realame等在个人中心自己设置
+//eancloud 分支需要去掉注册账号这一步
+
+class SignUpPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   String _userName, _password;
   bool _isObscure = true;
   Color _eyeColor;
 
-  _login(String name, String password) async {
+  _signUp(String name, String password) async {
 //    showToast('注册signUp');
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
+
     try {
-      LCUser user = await LCUser.login(_userName, _password);
+      LCUser user = LCUser();
+      user.username = _userName;
+      user.password = _password;
+      LCUser newUser = await user.signUp();
+      //注册后自动登录
+      await LCUser.login(_userName, _password);
       // 延时2s执行返回
       Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context); //销毁 loading
+        Navigator.pop(context);
         Navigator.pushAndRemoveUntil(
             context,
             new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
@@ -49,7 +59,6 @@ class _LoginPageState extends State<LoginPage> {
                 buildEmailTextField(),
                 SizedBox(height: 30.0),
                 buildPasswordTextField(context),
-                buildForgetPasswordText(context),
                 SizedBox(height: 60.0),
                 buildLoginButton(context),
                 SizedBox(height: 30.0),
@@ -66,17 +75,17 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('没有账号？'),
+            Text('已经有账号？'),
             GestureDetector(
               child: Text(
-                '点击注册',
+                '点击登录',
                 style: TextStyle(color: Colors.green),
               ),
               onTap: () {
-                //跳转到注册页面
+                // 跳转到登录页面
                 Navigator.pushAndRemoveUntil(
                     context,
-                    new MaterialPageRoute(builder: (context) => SignUpPage()),
+                    new MaterialPageRoute(builder: (context) => LoginPage()),
                     (_) => false);
               },
             ),
@@ -93,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
         width: 270.0,
         child: RaisedButton(
           child: Text(
-            'Login',
+            '注册',
             style: Theme.of(context).primaryTextTheme.headline,
           ),
           color: Colors.black,
@@ -101,31 +110,11 @@ class _LoginPageState extends State<LoginPage> {
             if (_formKey.currentState.validate()) {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
-              //执行登录方法
-              print('email:$_userName , assword:$_password');
-              _login(_userName, _password);
+              //注册
+              _signUp(_userName, _password);
             }
           },
           shape: StadiumBorder(side: BorderSide()),
-        ),
-      ),
-    );
-  }
-
-  Padding buildForgetPasswordText(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: FlatButton(
-          child: Text(
-            '忘记密码？',
-            style: TextStyle(fontSize: 14.0, color: Colors.grey),
-          ),
-          onPressed: () {
-//            Navigator.pop(context);
-            showToast('忘记密码');
-          },
         ),
       ),
     );
@@ -162,11 +151,11 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField buildEmailTextField() {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Emall Address',
+        labelText: 'User Name',
       ),
       validator: (String value) {
         if (value.isEmpty) {
-          return '请输入邮箱信息';
+          return '请输入用户名';
         }
         return null;
       },
@@ -180,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Align(
           alignment: Alignment.center,
           child: Text(
-            'LeanCloud Login',
+            'LeanCloud 注册',
             style: TextStyle(fontSize: 28.0),
           ),
         ));

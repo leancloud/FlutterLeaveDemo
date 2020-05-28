@@ -61,7 +61,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                         formatDate(createdAt, [yyyy, "-", mm, "-", dd, " "]);
 
                         return Container(
-                          padding: const EdgeInsets.all(13.0),
+                          padding: const EdgeInsets.all(10),
                           child: Row(
                             children: <Widget>[
                               new Expanded(
@@ -70,7 +70,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     new Container(
-                                      padding: const EdgeInsets.only(bottom: 8.0),
+                                      padding: const EdgeInsets.only(bottom: 8.0,right: 8,left: 10),
                                       child: new Text(
                                         getVacationType(_type),
                                         style: new TextStyle(
@@ -78,22 +78,26 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                         ),
                                       ),
                                     ),
-                                    new Text(
-                                      note,
-                                      style: new TextStyle(
-                                        color: Colors.grey[500],
+                                    new Container(
+                                      padding: const EdgeInsets.only(bottom: 8.0,right: 8,left: 10),
+                                      child: new Text(
+                                        note,
+                                        style: new TextStyle(
+                                          color: Colors.grey[500],
+                                        ),
                                       ),
                                     ),
+
                                   ],
                                 ),
                               ),
                               new Expanded(
                                 flex: 1,
                                 child: new Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     new Container(
-                                      padding: const EdgeInsets.only(bottom: 8.0),
+                                      padding: const EdgeInsets.only(bottom: 8.0,right: 10),
                                       child: new Text(
                                         '${_duration.toString()} 天',
                                         style: new TextStyle(
@@ -101,12 +105,16 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                         ),
                                       ),
                                     ),
-                                    new Text(
-                                      updatedAtString,
-                                      style: new TextStyle(
-                                        color: Colors.grey[500],
+                                    new Container(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: new Text(
+                                        updatedAtString,
+                                        style: new TextStyle(
+                                          color: Colors.grey[500],
+                                        ),
                                       ),
                                     ),
+
                                   ],
                                 ),
                               ),
