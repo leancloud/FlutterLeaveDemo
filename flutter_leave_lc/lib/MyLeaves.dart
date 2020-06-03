@@ -9,8 +9,6 @@ class MyLeavesPage extends StatefulWidget {
 }
 
 class _MyLeavesPageState extends State<MyLeavesPage> {
-  List<LCObject> _historyList; //全部记录
-  int _listSize = 0;
 
   @override
   void initState() {
@@ -72,7 +70,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                     new Container(
                                       padding: const EdgeInsets.only(bottom: 8.0,right: 8,left: 10),
                                       child: new Text(
-                                        getVacationType(_type),
+                                        getVacationTypeString(_type),
                                         style: new TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -133,7 +131,6 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
           },
         ),
       ),
-
       );
 
   }

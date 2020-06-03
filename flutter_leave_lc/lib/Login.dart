@@ -3,6 +3,7 @@ import 'HomeBottomBar.dart';
 import 'SignUp.dart';
 import 'Common/Global.dart';
 import 'package:leancloud_storage/leancloud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,21 +16,18 @@ class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
   Color _eyeColor;
 
-  _login(String name, String password) async {
-//    showToast('注册signUp');
+   userLogin(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
     try {
-      LCUser user = await LCUser.login(_userName, _password);
-      // 延时2s执行返回
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context); //销毁 loading
-        Navigator.pushAndRemoveUntil(
-            context,
-            new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
-            (_) => false);
-      });
+      LCUser user = await LCUser.login(name, password);
+      Navigator.pop(context); //销毁 loading
+      Navigator.pushAndRemoveUntil(
+          context,
+          new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
+          (_) => false);
     } on LCException catch (e) {
       showToast('Error:${e.message}');
+      Navigator.pop(context); //销毁 loading
     }
   }
 
@@ -103,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
               _formKey.currentState.save();
               //执行登录方法
               print('email:$_userName , assword:$_password');
-              _login(_userName, _password);
+              userLogin(_userName, _password);
             }
           },
           shape: StadiumBorder(side: BorderSide()),
@@ -162,11 +160,11 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField buildEmailTextField() {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Emall Address',
+        labelText: 'User Name',
       ),
       validator: (String value) {
         if (value.isEmpty) {
-          return '请输入邮箱信息';
+          return '请输入用户名';
         }
         return null;
       },

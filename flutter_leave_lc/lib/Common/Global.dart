@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:leancloud_storage/leancloud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:date_format/date_format.dart';
 
-String getVacationType(int type) {
+String getVacationTypeString(int type) {
   //['带薪休假或事假', '病假', '婚假', '产假', '产检假', '陪产假']
-
   switch (type) {
     case 0:
       return '病假';
@@ -27,7 +28,53 @@ String getVacationType(int type) {
   }
   return '错误的假期类型';
 }
-void showToast (String msg){
+
+String time2cn(String time) {
+  if (time == 'AM') {
+    return '上午';
+  } else {
+    return '下午';
+  }
+}
+
+int getVacationTypeInt(String type) {
+  switch (type) {
+    case '病假':
+      return 0;
+      break;
+    case '带薪休假或事假':
+      return 1;
+      break;
+    case '产假':
+      return 2;
+      break;
+    case '产检假':
+      return 3;
+      break;
+    case '婚假':
+      return 4;
+      break;
+    case '陪产假':
+      return 5;
+      break;
+  }
+  return 100;
+}
+
+bool isSameDay(DateTime day1, DateTime day2) {
+  return day1.isAtSameMomentAs(day2);
+}
+
+DateTime formatDateForYMD(DateTime day) {
+  String newDay = formatDate(day, [yyyy, '-', mm, '-', dd]);
+  return DateTime.parse(newDay);
+}
+
+bool isWeekend(DateTime someDay) {
+  return someDay.weekday == 6 || someDay.weekday == 7;
+}
+
+void showToast(String msg) {
   Fluttertoast.showToast(
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
@@ -58,9 +105,11 @@ class Global {
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     //初始化网络请求相关配置
-      LeanCloud.initialize(
-          'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
-          server: 'https://elawfuk8.lc-cn-n1-shared.com',
-          queryCache: new LCQueryCache());
+    LeanCloud.initialize(
+        'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
+        server: 'https://elawfuk8.lc-cn-n1-shared.com',
+        queryCache: new LCQueryCache());
+    // 在 LeanCloud.initialize 初始化之后执行
+//    LCLogger.setLevel(LCLogger.DebugLevel);
   }
 }

@@ -5,6 +5,7 @@ import 'Login.dart';
 import 'HomeBottomBar.dart';
 import 'Common/Global.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
 //用户注册的时候只要用户名+密码，手机号、邮箱、Realame等在个人中心自己设置
 //eancloud 分支需要去掉注册账号这一步
 
@@ -19,27 +20,24 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isObscure = true;
   Color _eyeColor;
 
-  _signUp(String name, String password) async {
-//    showToast('注册signUp');
+  userSignUp(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
-
     try {
       LCUser user = LCUser();
-      user.username = _userName;
-      user.password = _password;
+      user.username = name;
+      user.password = password;
       LCUser newUser = await user.signUp();
       //注册后自动登录
-      await LCUser.login(_userName, _password);
-      // 延时2s执行返回
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context);
-        Navigator.pushAndRemoveUntil(
-            context,
-            new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
-            (_) => false);
-      });
+      await LCUser.login(name, password);
+      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+          context,
+          new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
+          (_) => false);
     } on LCException catch (e) {
       showToast('Error:${e.message}');
+      Navigator.pop(context); //销毁 loading
+
     }
   }
 
@@ -111,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //注册
-              _signUp(_userName, _password);
+              userSignUp(_userName, _password);
             }
           },
           shape: StadiumBorder(side: BorderSide()),

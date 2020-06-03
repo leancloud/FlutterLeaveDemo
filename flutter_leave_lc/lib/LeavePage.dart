@@ -1,8 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapplc/Model/Leave.dart';
 import 'package:leancloud_storage/leancloud.dart';
 import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'Common/Global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+//TODO：管理员请假、delete 历史记录
+
+//保存请假信息
+Future<List<LCObject>> getIrregular(
+    DateTime startDate, DateTime endDate) async {
+//  if (startDate == null || endDate == null) {
+//    showToast('起始或终止时间非法！');
+//  }
+////    if (this._endDate.isBefore(this._startDate)) {
+//      showToast('恢复工作日期需在请假日期之后');
+//      return;
+//    }
+//    if (isSameDay(this._startDate, this._endDate)) {
+//      showToast('起始或终止时间非法！');
+//      return;
+//    }
+
+  LCQuery<LCObject> query = LCQuery('Irregular');
+  query.whereLessThan('date', endDate);
+  query.whereGreaterThan('date', startDate);
+  query.orderByAscending('date');
+
+  List<LCObject> irregularDays = await query.find();
+  print('irregularDays 的长度：${irregularDays.length}');
+  return irregularDays;
+
+//    Future<double> duration = getDuration(
+//        irregularDays, type, startDate, startTime, endDate, endTime);
+//    duration.then((value) {
+//      print('一共请假 $value 天');
+//      return true;
+//    });
+
+//    try {
+//      // 构建对象
+//      LCObject leave = LCObject("Leave");
+//// 为属性赋值
+//      leave['title'] = '马拉松报名';
+//      leave['priority'] = 2;
+//      leave['title'] = '马拉松报名';
+//      leave['priority'] = 2;
+//      leave['title'] = '马拉松报名';
+//      leave['priority'] = 2;
+//      leave['title'] = '马拉松报名';
+//      leave['priority'] = 2;
+//      leave['title'] = '马拉松报名';
+//      leave['priority'] = 2;
+//// 将对象保存到云端
+//      await leave.save();
+//      LCUser user = await LCUser.getCurrent();
+//      showToast('请假成功');
+//      Navigator.pop(context); //销毁 loading
+//    } on LCException catch (e) {
+//      print('ERROR ${e.code} : ${e.message}');
+//      showToast('请假失败：${e.code} : ${e.message}');
+//    }
+}
+
+//计算天数
+Future<double> getDuration(
+    List<LCObject> irregularDays,
+    int type,
+    DateTime startDate,
+    String startTime,
+    DateTime endDate,
+    String endTime) async {
+  startDate = formatDateForYMD(startDate);
+  endDate = formatDateForYMD(endDate);
+
+  print(irregularDays.length);
+  print(type);
+  print(startDate.toString());
+  print(startTime);
+  print(endDate.toString());
+  print(endTime);
+
+  double duration = 0;
+  duration = endDate.difference(startDate).inDays.toDouble();
+
+  if (type == 2 || type == 3 || type == 4 || type == 5) {
+    // 产假/产检/婚假 需要算上周末和法定假日
+    duration = duration + 1;
+    if (startDate == endDate) {
+      // startTime == 'PM' is meaningless
+      if (startTime == 'PM') {
+        duration = 0;
+      }
+      if (endTime == 'PM') {
+        duration += 0.5;
+      }
+    } else {
+      if (startTime == 'PM') {
+        duration -= 0.5;
+      }
+      if (endTime == 'PM') {
+        duration += 0.5;
+      }
+    }
+
+    return duration;
+  }
+// calc not including start and end
+  for (DateTime m = startDate;
+      m.isBefore(endDate);
+      m = m.add(new Duration(days: 1))) {
+    // - weekends
+    // 0 -> sunday
+    // 6 -> saturday
+    if (isWeekend(m)) {
+      duration = duration - 1;
+    }
+    // - irregular
+    if (irregularDays.length != 0) {
+      for (int i = 0; i < irregularDays.length; i++) {
+        DateTime dates = irregularDays[i]['date'];
+        DateTime date = formatDateForYMD(dates);
+        bool holiday = irregularDays[i]['holiday'];
+
+        if (date != null && isSameDay(m, date)) {
+          if (!isWeekend(m) && holiday == true) {
+            duration = duration - 1;
+          } else if (isWeekend(m) && holiday != true) {
+            duration = duration + 1;
+          }
+        }
+      }
+    }
+  }
+  bool startinirregular = false;
+  bool endinirregular = false;
+  if (irregularDays.length != 0) {
+    for (int j = 0; j < irregularDays.length; j++) {
+      DateTime dates = irregularDays[j]['date'];
+      DateTime date = formatDateForYMD(dates);
+      bool holiday = irregularDays[j]['holiday'];
+      if (isSameDay(startDate, date)) {
+        startinirregular = true;
+        if (!holiday) {
+          if (startTime == 'PM') {
+            duration += 0.5;
+          } else {
+            duration = duration + 1;
+          }
+        }
+      }
+      if (isSameDay(endDate, date)) {
+        endinirregular = true;
+        if (!holiday) {
+          if (endTime == 'PM') {
+            duration += 0.5;
+          }
+        }
+      }
+    }
+  }
+
+  if (!startinirregular) {
+    if (!isWeekend(startDate)) {
+      if (startTime == 'PM') {
+        duration += 0.5;
+      } else {
+//        duration += 1;
+
+      }
+    }
+  }
+  if (!endinirregular) {
+    if (endTime == 'PM' && !isWeekend(endDate)) {
+      duration += 0.5;
+    }
+  }
+  return duration;
+}
 
 class LeavePage extends StatefulWidget {
   LeavePage({Key key}) : super(key: key);
@@ -12,41 +188,29 @@ class LeavePage extends StatefulWidget {
 enum DateType { startDateType, endDateType }
 
 class _LeavePageState extends State<LeavePage> {
-
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
   String _dropdownStartTime = 'AM';
   String _dropdownEndTime = 'AM';
   String _leaveType = '带薪休假或事假';
+
   final TextEditingController _controller = new TextEditingController();
 
-  String _formatDate(DateType type) {
-    switch (type) {
-      case DateType.startDateType:
-        if (this._startDate != null) {
-          return formatDate(this._startDate, ['yyyy', '-', 'mm', '-', 'dd']);
-        } else {
-          this._startDate = DateTime.now();
-          return '还未选择';
-        }
-        break;
-      case DateType.endDateType:
-        if (this._endDate != null) {
-          return formatDate(this._endDate, ['yyyy', '-', 'mm', '-', 'dd']);
-        } else {
-          this._endDate = DateTime.now();
-          return '还未选择';
-        }
-        break;
+  String _formatDate(DateTime date, DateType type) {
+    if (date != null) {
+      return formatDate(date, ['yyyy', '-', 'mm', '-', 'dd']);
+    } else if (type == DateType.startDateType) {
+      this._startDate = DateTime.now();
+      return '还未选择';
+    } else {
+      this._endDate = DateTime.now();
+      return '还未选择';
     }
-    return '还未选择';
   }
 
   //调起日期选择器
-  void _showDatePicker() async {
-    // 第二种方式：async+await
-    //await的作用是等待异步方法showDatePicker执行完毕之后获取返回值
-    var result = await showDatePicker(
+  void _showStartDatePicker() async {
+    DateTime result = await showDatePicker(
       context: context,
       initialDate: this._startDate, //选中的日期
       firstDate: DateTime(1980), //日期选择器上可选择的最早日期
@@ -58,14 +222,17 @@ class _LeavePageState extends State<LeavePage> {
     });
   }
 
-  void saveLeaving() async {
-    try {
-      LCUser user = await LCUser.login('Tom', '123');
-      showToast('请假成功');
-    } on LCException catch (e) {
-      print('${e.code} : ${e.message}');
-      showToast('请假失败：${e.code} : ${e.message}');
-    }
+  void _showEndDatePicker() async {
+    DateTime result = await showDatePicker(
+      context: context,
+      initialDate: this._endDate, //选中的日期
+      firstDate: DateTime(1980), //日期选择器上可选择的最早日期
+      lastDate: DateTime(2100),
+    );
+    //将选中的值传递出来
+    setState(() {
+      this._endDate = result;
+    });
   }
 
   @override
@@ -81,11 +248,12 @@ class _LeavePageState extends State<LeavePage> {
               children: <Widget>[
                 Text('开始请假的日期： '),
                 InkWell(
-                  onTap: this._showDatePicker,
+                  onTap: this._showStartDatePicker,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(this._formatDate(DateType.startDateType)),
+                      Text(this._formatDate(
+                          this._startDate, DateType.startDateType)),
                       Icon(Icons.arrow_drop_down)
                     ],
                   ),
@@ -119,11 +287,12 @@ class _LeavePageState extends State<LeavePage> {
               children: <Widget>[
                 Text('恢复工作的日期： '),
                 InkWell(
-                  onTap: this._showDatePicker,
+                  onTap: _showEndDatePicker,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(this._formatDate(DateType.endDateType)),
+                      Text(this
+                          ._formatDate(this._endDate, DateType.endDateType)),
                       Icon(Icons.arrow_drop_down)
                     ],
                   ),
@@ -183,6 +352,7 @@ class _LeavePageState extends State<LeavePage> {
               Expanded(
                 child: TextField(
                   controller: _controller,
+                  textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.multiline,
                   maxLines: 5,
                   minLines: 1,
@@ -210,7 +380,28 @@ class _LeavePageState extends State<LeavePage> {
               children: <Widget>[
                 RaisedButton(
                   child: Text("保存"),
-                  onPressed: saveLeaving,
+                  onPressed: () {
+                    print('开始日期星期：${this._startDate.weekday}');
+                    CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
+                    getIrregular(this._startDate, this._endDate)
+                        .then((response) {
+                      print('response.length：${response.length}');
+
+                      //返回所有 IrregularDays
+                      //获取请假时间
+                      getDuration(
+                              response,
+                              getVacationTypeInt(this._leaveType),
+                              this._startDate,
+                              this._dropdownStartTime,
+                              this._endDate,
+                              this._dropdownEndTime)
+                          .then((response) {
+                        print('一共请假 $response 天');
+                        Navigator.pop(context); //销毁 loading
+                      });
+                    });
+                  },
                 )
               ],
             ),
