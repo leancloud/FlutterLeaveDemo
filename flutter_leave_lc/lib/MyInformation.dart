@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//用户注册的时候只要用户名+密码，手机号、邮箱、RealName等在个人中心自己设置
+//TODO 手机号、邮箱、RealName
 
 
 class MyInformationPage extends StatefulWidget {

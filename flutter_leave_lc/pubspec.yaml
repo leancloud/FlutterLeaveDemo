@@ -30,6 +30,9 @@ dependencies:
   english_words: ^3.1.0
   shared_preferences: ^0.5.7+3
   flutter_markdown: ^0.4.1
+  url_launcher: ^5.0.3
+  get_it: ^1.0.3+2
+
 
 
 dev_dependencies:
@@ -44,6 +47,10 @@ dev_dependencies:
   english_words: ^3.1.0
   shared_preferences: ^0.5.7+3
   flutter_markdown: ^0.4.1
+  url_launcher: ^5.0.3
+  get_it: ^1.0.3+2
+
+
 
 
 

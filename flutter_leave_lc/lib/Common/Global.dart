@@ -3,6 +3,7 @@ import 'package:leancloud_storage/leancloud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_format/date_format.dart';
+import 'ServiceLocator.dart';
 
 String getVacationTypeString(int type) {
   //['带薪休假或事假', '病假', '婚假', '产假', '产检假', '陪产假']
@@ -84,6 +85,7 @@ void showToastRed(String msg) {
       textColor: Colors.white,
       fontSize: 20.0);
 }
+
 void showToastGreen(String msg) {
   Fluttertoast.showToast(
       msg: msg,
@@ -121,6 +123,8 @@ class Global {
         queryCache: new LCQueryCache());
     // 在 LeanCloud.initialize 初始化之后执行
 //    LCLogger.setLevel(LCLogger.DebugLevel);
-   }
 
+    // 注册服务
+    setupLocator();
+  }
 }
