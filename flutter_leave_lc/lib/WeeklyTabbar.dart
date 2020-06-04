@@ -41,6 +41,7 @@ class _WeeklyTabBarPageState extends State<WeeklyTabBarPage>
         ),
       ),
       body: new TabBarView(
+        physics: new NeverScrollableScrollPhysics(),
         controller: _tabController,
         children: _pages,
       ),

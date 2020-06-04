@@ -42,6 +42,8 @@ class _LeaveTabPageState extends State<LeaveTabPage>
         ),
       ),
       body: new TabBarView(
+        //不要滑动
+        physics: new NeverScrollableScrollPhysics(),
         controller: _tabController,
         children: _pages,
       ),

@@ -329,8 +329,9 @@ Future<LCObject> saveLeave(double duration, int leaveType, DateTime startDate,
   } else {
     leave['realName'] = '';
   }
+  LCObject obj = await leave.save();
   showToastGreen('请假成功');
-  return await leave.save();
+  return obj;
 }
 
 //计算天数

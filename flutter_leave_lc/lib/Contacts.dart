@@ -13,9 +13,8 @@ class _ContactsPageState extends State<ContactsPage> {
   @override
   void initState() {
     super.initState();
-    retrieveData();
+//    retrieveData();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

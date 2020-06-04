@@ -13,10 +13,6 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
   @override
   void initState() {
     super.initState();
-    retrieveData();
-  }
-  String showRealname(){
-
   }
   @override
   Widget build(BuildContext context) {
