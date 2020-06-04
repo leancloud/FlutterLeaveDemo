@@ -11,7 +11,7 @@ class MyInformationPage extends StatefulWidget {
 
 
 class _MyInformationPageState extends State<MyInformationPage> {
-  String  _username = '暂无';
+  String  name = '暂无';
   @override
   void initState() {
     super.initState();
@@ -20,7 +20,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
 
   getUserName() async {
     final prefs = await SharedPreferences.getInstance();
-    this._username = prefs.getString('username');
+    this.name = prefs.getString('username');
     setState(() {
     });
   }
@@ -45,7 +45,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                       child:Icon(Icons.face,color: Colors.blue,),
                     ),
                   ),
-                  Text(this._username,
+                  Text(this.name,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   )
                 ],

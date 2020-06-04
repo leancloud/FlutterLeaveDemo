@@ -121,5 +121,6 @@ class Global {
         queryCache: new LCQueryCache());
     // 在 LeanCloud.initialize 初始化之后执行
 //    LCLogger.setLevel(LCLogger.DebugLevel);
-  }
+   }
+
 }

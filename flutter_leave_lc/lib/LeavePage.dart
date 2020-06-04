@@ -327,7 +327,7 @@ Future<LCObject> saveLeave(double duration, int leaveType, DateTime startDate,
   if (userRN != null) {
     leave['realName'] = userRN;
   } else {
-    leave['realName'] = '暂无';
+    leave['realName'] = '';
   }
   showToastGreen('请假成功');
   return await leave.save();

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapplc/WeeklySummary.dart';
+import 'package:flutterapplc/WeeklyTabbar.dart';
 import 'LeavePage.dart';
 import 'MyInformation.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
@@ -15,7 +17,7 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
 
   List<Widget> _pages = [
     LeaveTabPage(),
-    WeeklySummaryPage(),
+    WeeklyTabBarPage(),
     ContactsPage(),
   ];
 //  final _pages = [LeaveTabPage(), WeeklySummaryPage(), ContactsPage()];

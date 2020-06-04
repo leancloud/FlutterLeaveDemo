@@ -15,7 +15,9 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
     super.initState();
     retrieveData();
   }
+  String showRealname(){
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +46,14 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                     itemBuilder: (context, index) {
                       var data = snapshot.data[index];
                       int type = data['type'];
+                      String name ;
                       String username = data['username'];
+                      String realName = data['realName'];
+                      if(realName == null || realName ==''){
+                        name = username;
+                      }else{
+                        name = realName;
+                      }
                       double duration = data['duration'];
                       String note;
                       if (data['note'] == null || data['note'] =='') {
@@ -66,7 +75,7 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                                 children: [
                                   new Container(
                                     padding: const EdgeInsets.only(bottom: 8.0,right: 8,left: 10),
-                                    child: new Text('$username ${getVacationTypeString(type)}',
+                                    child: new Text('$name ${getVacationTypeString(type)}',
                                       style: new TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -135,11 +144,9 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
     LCQuery<LCObject> query = LCQuery('Leave');
     query.whereGreaterThanOrEqualTo('endDate', DateTime.now());
     query.whereLessThanOrEqualTo('startDate', DateTime.now());
-
     query.orderByDescending('createdAt');
     List<LCObject> leaves = await query.find();
-    //更新视图
-//    setState(() {});
+
     return leaves;
   }
 }
