@@ -37,7 +37,7 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
 //          IconButton(icon: Icon(Icons.share), onPressed: () {}),
         ],
       ),
-      drawer: new MyDrawer(), //抽屉
+      drawer: new MyInformationPage(), //抽屉
       body: this._pages[this._currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         // 底部导航

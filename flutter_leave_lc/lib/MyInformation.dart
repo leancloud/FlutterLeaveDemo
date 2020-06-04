@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 //用户注册的时候只要用户名+密码，手机号、邮箱、RealName等在个人中心自己设置
 
-class MyDrawer extends StatelessWidget {
-  const MyDrawer({
-    Key key,
-  }) : super(key: key);
+
+class MyInformationPage extends StatefulWidget {
+  MyInformationPage({Key key}) : super(key: key);
+  _MyInformationPageState createState() => _MyInformationPageState();
+}
+
+
+class _MyInformationPageState extends State<MyInformationPage> {
+  String  _username = '暂无';
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
+ }
+
+  getUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    this._username = prefs.getString('username');
+    setState(() {
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +42,10 @@ class MyDrawer extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: ClipOval(
-                      child: Image.asset(
-                        "imgs/avatar.png",
-                        width: 80,
-                      ),
+                      child:Icon(Icons.face,color: Colors.blue,),
                     ),
                   ),
-                  Text(
-                    "Wendux",
+                  Text(this._username,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   )
                 ],

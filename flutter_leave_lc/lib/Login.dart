@@ -16,10 +16,13 @@ class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true;
   Color _eyeColor;
 
-   userLogin(String name, String password) async {
+  userLogin(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
     try {
       LCUser user = await LCUser.login(name, password);
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('username', user.username);
+
       Navigator.pop(context); //销毁 loading
       Navigator.pushAndRemoveUntil(
           context,
