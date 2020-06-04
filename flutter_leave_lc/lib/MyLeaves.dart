@@ -23,16 +23,13 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
 //        padding: EdgeInsets.all(2.0),
         child:
         FutureBuilder<List<LCObject>>(
-
           future: retrieveData(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             // 请求已结束
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
-                // 请求失败，显示错误
                 return Text("Error: ${snapshot.error}");
               } else {
-                // 请求成功，显示数据
                 return
                     ListView.separated(
                       //添加分割线
@@ -45,19 +42,18 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        var _data = snapshot.data[index];
-                        int _type = _data['type'];
-                        int _duration = _data['duration'];
+                        var data = snapshot.data[index];
+                        int type = data['type'];
+                        double duration = data['duration'];
                         String note;
-                        if (_data['note'] == null) {
+                        if (data['note'] == null || data['note'] =='') {
                           note = '因为羞羞的原因';
                         } else {
-                          note = _data['note'];
+                          note = data['note'];
                         }
-                        DateTime createdAt = _data.createdAt;
+                        DateTime createdAt = data['startDate'];
                         String updatedAtString =
                         formatDate(createdAt, [yyyy, "-", mm, "-", dd, " "]);
-
                         return Container(
                           padding: const EdgeInsets.all(10),
                           child: Row(
@@ -70,7 +66,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                     new Container(
                                       padding: const EdgeInsets.only(bottom: 8.0,right: 8,left: 10),
                                       child: new Text(
-                                        getVacationTypeString(_type),
+                                        getVacationTypeString(type),
                                         style: new TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -95,9 +91,9 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     new Container(
-                                      padding: const EdgeInsets.only(bottom: 8.0,right: 10),
+                                      padding: const EdgeInsets.only(bottom: 8.0,right: 15),
                                       child: new Text(
-                                        '${_duration.toString()} 天',
+                                        '${duration.toString()} 天',
                                         style: new TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -132,12 +128,12 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
         ),
       ),
       );
-
   }
-
   Future <List<LCObject>> retrieveData() async {
+    LCUser user = await LCUser.getCurrent();
     LCQuery<LCObject> query = LCQuery('Leave');
-    query.orderByAscending('createdAt');
+    query.whereEqualTo('username', user.username);
+    query.orderByDescending('createdAt');
     List<LCObject> leaves = await query.find();
     //更新视图
 //    setState(() {});

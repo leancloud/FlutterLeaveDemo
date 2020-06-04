@@ -11,7 +11,7 @@ class LeaveTabPage extends StatefulWidget {
 class _LeaveTabPageState extends State<LeaveTabPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List _tabs = ["请假", "请假历史", "今日休假"];
+  List _tabs = ["请假", "我的请假历史", "今日休假同事"];
   List<Widget> _pages = [
     LeavePage(),
     MyLeavesPage(),

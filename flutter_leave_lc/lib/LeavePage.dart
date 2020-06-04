@@ -257,9 +257,9 @@ class _LeavePageState extends State<LeavePage> {
                           saveLeave(
                                   duration,
                                   getVacationTypeInt(this._leaveType),
-                                  this._startDate,
+                                  formatDateForYMD(this._startDate),
                                   this._dropdownStartTime,
-                                  this._endDate,
+                                  formatDateForYMD(this._endDate),
                                   this._dropdownEndTime,
                                   this._controller.text)
                               .then((response) {
@@ -316,10 +316,11 @@ Future<LCObject> saveLeave(double duration, int leaveType, DateTime startDate,
   leave['startDate'] = startDate;
   leave['type'] = leaveType;
   leave['duration'] = duration;
-  if (note != null) {
-    leave['note'] = note;
-  } else {
+  print('-------note= $note');
+  if (note == null || note == '') {
     leave['note'] = '因为羞羞的原因';
+  } else {
+    leave['note'] = note;
   }
   leave['endDate'] = endDate;
   String userRN = user['realName'];
