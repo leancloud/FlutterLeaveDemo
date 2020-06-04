@@ -35,7 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
           new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
           (_) => false);
     } on LCException catch (e) {
-      showToast('Error:${e.message}');
+      showToastRed('Error:${e.message}');
       Navigator.pop(context); //销毁 loading
 
     }
