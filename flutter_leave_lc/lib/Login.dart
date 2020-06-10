@@ -11,17 +11,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _controllerName = new TextEditingController();
+  final TextEditingController _controllerPassword = new TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   String _userName, _password;
   bool _isObscure = true;
   Color _eyeColor;
 
+  @override
+  void initState(){
+    // TODO: implement initState
+    super.initState();
+   saveProfile();
+  }
+  saveProfile() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String name = prefs.getString('username');
+    if( name != null){
+      _controllerName.text = name;
+    }
+    String password= prefs.getString('password');
+    if( password != null){
+      _controllerPassword.text = password;
+    }
+  }
+
   userLogin(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
     try {
       LCUser user = await LCUser.login(name, password);
+
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString('username', user.username);
+      await prefs.setString('username', user.username);
+      await prefs.setString('password', password);
 
       Navigator.pop(context); //销毁 loading
       Navigator.pushAndRemoveUntil(
@@ -134,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField buildPasswordTextField(BuildContext context) {
     return TextFormField(
+      controller: _controllerPassword,
       onSaved: (String value) => _password = value,
       obscureText: _isObscure,
       validator: (String value) {
@@ -162,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField buildEmailTextField() {
     return TextFormField(
+      controller: _controllerName,
       decoration: InputDecoration(
         labelText: 'User Name',
       ),
