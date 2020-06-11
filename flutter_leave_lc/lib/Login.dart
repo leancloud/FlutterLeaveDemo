@@ -5,6 +5,8 @@ import 'Common/Global.dart';
 import 'package:leancloud_storage/leancloud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//Todo 游客可以注册登录，LeanCloud 员工不必注册
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -27,30 +29,27 @@ class _LoginPageState extends State<LoginPage> {
   }
   saveProfile() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String name = prefs.getString('username');
+    String name =  prefs.getString('username');
     if( name != null){
       _controllerName.text = name;
     }
-    String password= prefs.getString('password');
+    String password=  prefs.getString('password');
     if( password != null){
       _controllerPassword.text = password;
     }
-  }
 
+  }
   userLogin(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
     try {
       LCUser user = await LCUser.login(name, password);
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', user.username);
-      await prefs.setString('password', password);
-
       Navigator.pop(context); //销毁 loading
+
       Navigator.pushAndRemoveUntil(
           context,
           new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
-          (_) => false);
+              (_) => false);
     } on LCException catch (e) {
       showToastRed('Error:${e.message}');
       Navigator.pop(context); //销毁 loading
@@ -123,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.black,
           onPressed: () {
             if (_formKey.currentState.validate()) {
-              ///只有输入的内容符合要求通过才会到达此处
+              //只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //执行登录方法
               print('email:$_userName , assword:$_password');
@@ -211,4 +210,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ));
   }
+
+
+
 }

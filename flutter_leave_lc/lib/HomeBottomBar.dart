@@ -6,6 +6,8 @@ import 'MyInformation.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'Contacts.dart';
 import 'LeaveTabBar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:leancloud_storage/leancloud.dart';
 
 class HomeBottomBarPage extends StatefulWidget {
   @override
@@ -27,6 +29,12 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
 ////    this._pageController = PageController(initialPage: this._currentIndex);
 //  }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   saveProfile();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,3 +71,11 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
     );
   }
 }
+
+Future saveProfile() async {
+  final prefs = await SharedPreferences.getInstance();
+  LCUser user = await LCUser.getCurrent();
+  await prefs.setString('username', user.username);
+  await prefs.setString('password', user.password);
+}
+

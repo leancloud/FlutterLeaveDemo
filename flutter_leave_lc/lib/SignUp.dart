@@ -30,9 +30,6 @@ class _SignUpPageState extends State<SignUpPage> {
       //注册后自动登录
       await LCUser.login(name, password);
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', user.username);
-      await prefs.setString('password', password);
       Navigator.pop(context);
       Navigator.pushAndRemoveUntil(
           context,
