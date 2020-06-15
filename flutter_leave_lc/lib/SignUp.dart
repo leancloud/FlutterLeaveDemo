@@ -20,26 +20,31 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isObscure = true;
   Color _eyeColor;
 
-  userSignUp(String name, String password) async {
+  Future userSignUp(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
-    try {
-      LCUser user = LCUser();
-      user.username = name;
-      user.password = password;
-      LCUser newUser = await user.signUp();
-      //注册后自动登录
-      await LCUser.login(name, password);
 
-      Navigator.pop(context);
-      Navigator.pushAndRemoveUntil(
-          context,
-          new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
-          (_) => false);
-    } on LCException catch (e) {
-      showToastRed('Error:${e.message}');
+    initLeanCloud().then((response) {
+      saveUserType('游客登录');
+
+      signUp(name, password).then((value) {
+        login(name, password).then((value) {
+          Navigator.pop(context); //销毁 loading
+          Navigator.pushAndRemoveUntil(
+              context,
+              new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
+              (_) => false);
+        }).catchError((error) {
+          showToastRed(error.toString());
+          Navigator.pop(context); //销毁 loading
+        });
+      }).catchError((error) {
+        showToastRed(error.toString());
+        Navigator.pop(context); //销毁 loading
+      });
+    }).catchError((error) {
+      showToastRed(error);
       Navigator.pop(context); //销毁 loading
-
-    }
+    });
   }
 
   @override
@@ -110,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ///只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
               //注册
-              userSignUp(_userName, _password);
+              userSignUp(this._userName, this._password);
             }
           },
           shape: StadiumBorder(side: BorderSide()),
@@ -172,5 +177,24 @@ class _SignUpPageState extends State<SignUpPage> {
             style: TextStyle(fontSize: 28.0),
           ),
         ));
+  }
+
+  Future login(String name, String password) async {
+    LCUser user = await LCUser.login(name, password);
+  }
+
+  Future signUp(String name, String password) async {
+    LCUser user = LCUser();
+    user.username = name;
+    user.password = password;
+    await user.signUp();
+  }
+
+  Future initLeanCloud() async {
+    //注册页面只有游客登录
+    LeanCloud.initialize(
+        'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
+        server: 'https://elawfuk8.lc-cn-n1-shared.com',
+        queryCache: new LCQueryCache());
   }
 }

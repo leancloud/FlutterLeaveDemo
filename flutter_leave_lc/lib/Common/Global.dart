@@ -127,4 +127,9 @@ class Global {
     // 注册服务
     setupLocator();
   }
+
+}
+Future saveUserType(String userType) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userType', userType);
 }

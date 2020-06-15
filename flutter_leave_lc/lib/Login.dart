@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerName = new TextEditingController();
   final TextEditingController _controllerPassword = new TextEditingController();
   String _userIfLeancloud = '游客登录';
-
   final _formKey = GlobalKey<FormState>();
   String _userName, _password;
   bool _isObscure = true;
@@ -46,11 +45,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  userLogin(String name, String password) async {
+  Future userLogin(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
 
     initLeanCloud().then((response) {
-      saveUserType();
+      saveUserType(this._userIfLeancloud);
       login(name, password).then((value) {
         Navigator.pop(context); //销毁 loading
         Navigator.pushAndRemoveUntil(
@@ -257,10 +256,7 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-  Future saveUserType() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userType', this._userIfLeancloud);
-  }
+
 
   Future login(String name, String password) async {
     LCUser user = await LCUser.login(name, password);

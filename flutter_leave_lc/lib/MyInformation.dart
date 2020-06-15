@@ -94,7 +94,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                         maxLines: 5,
                         minLines: 1,
                         decoration: const InputDecoration(
-                          hintText: '真实姓名',
+                          hintText: '',
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(
@@ -128,7 +128,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                         maxLines: 5,
                         minLines: 1,
                         decoration: const InputDecoration(
-                          hintText: '手机号',
+                          hintText: '',
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(

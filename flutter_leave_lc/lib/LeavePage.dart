@@ -66,7 +66,7 @@ class _LeavePageState extends State<LeavePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: new Container(
-        margin: const EdgeInsets.all(30.0),
+        margin: const EdgeInsets.all(10.0),
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 22.0),
           children: <Widget>[
@@ -116,7 +116,7 @@ class _LeavePageState extends State<LeavePage> {
                 InkWell(
                   onTap: _showEndDatePicker,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Text(this
                           ._formatDate(this._endDate, DateType.endDateType)),
@@ -126,7 +126,7 @@ class _LeavePageState extends State<LeavePage> {
                 ),
                 InkWell(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       DropdownButton<String>(
                         value: this._dropdownEndTime,
@@ -153,7 +153,7 @@ class _LeavePageState extends State<LeavePage> {
               children: <Widget>[
                 Text('类型： '),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     DropdownButton<String>(
                       value: this._leaveType,
