@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerName = new TextEditingController();
   final TextEditingController _controllerPassword = new TextEditingController();
+  String _userIfLeancloud = '游客登录';
 
   final _formKey = GlobalKey<FormState>();
   String _userName, _password;
@@ -22,38 +23,48 @@ class _LoginPageState extends State<LoginPage> {
   Color _eyeColor;
 
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
     super.initState();
-   saveProfile();
+    saveProfile();
   }
-  saveProfile() async{
+
+  saveProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String name =  prefs.getString('username');
-    if( name != null){
+    String name = prefs.getString('username');
+    String userType = prefs.getString('userType');
+
+    if (name != null) {
       _controllerName.text = name;
     }
-    String password=  prefs.getString('password');
-    if( password != null){
+    String password = prefs.getString('password');
+    if (password != null) {
       _controllerPassword.text = password;
     }
-
+    if (userType != null) {
+      _userIfLeancloud = userType;
+    }
   }
+
   userLogin(String name, String password) async {
     CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
-    try {
-      LCUser user = await LCUser.login(name, password);
 
+    initLeanCloud().then((response) {
+      saveUserType();
+      login(name, password).then((value) {
+        Navigator.pop(context); //销毁 loading
+        Navigator.pushAndRemoveUntil(
+            context,
+            new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
+            (_) => false);
+      }).catchError((error) {
+        showToastRed(error.toString());
+        Navigator.pop(context); //销毁 loading
+      });
+    }).catchError((error) {
+      showToastRed(error);
       Navigator.pop(context); //销毁 loading
-
-      Navigator.pushAndRemoveUntil(
-          context,
-          new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
-              (_) => false);
-    } on LCException catch (e) {
-      showToastRed('Error:${e.message}');
-      Navigator.pop(context); //销毁 loading
-    }
+    });
   }
 
   @override
@@ -68,7 +79,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: kToolbarHeight,
                 ),
                 buildTitle(),
-                SizedBox(height: 70.0),
+                SizedBox(height: 20.0),
+                buildChooseUserDropdownButton(context),
+                SizedBox(height: 30.0),
                 buildEmailTextField(),
                 SizedBox(height: 30.0),
                 buildPasswordTextField(context),
@@ -82,31 +95,40 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Align buildRegisterText(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: EdgeInsets.only(top: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('没有账号？'),
-            GestureDetector(
-              child: Text(
-                '点击注册',
-                style: TextStyle(color: Colors.green),
+    Align content;
+    if (_userIfLeancloud == 'LeanCloud 员工') {
+      content = Align(
+        alignment: Alignment.center,
+        child: new Container(height: 0.0, width: 0.0),
+      );
+    } else {
+      content = Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('没有账号？'),
+              GestureDetector(
+                child: Text(
+                  '点击注册',
+                  style: TextStyle(color: Colors.green),
+                ),
+                onTap: () {
+                  //跳转到注册页面
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      new MaterialPageRoute(builder: (context) => SignUpPage()),
+                      (_) => false);
+                },
               ),
-              onTap: () {
-                //跳转到注册页面
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    new MaterialPageRoute(builder: (context) => SignUpPage()),
-                    (_) => false);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
+    return content;
   }
 
   Align buildLoginButton(BuildContext context) {
@@ -124,13 +146,37 @@ class _LoginPageState extends State<LoginPage> {
             if (_formKey.currentState.validate()) {
               //只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
-              //执行登录方法
-              print('email:$_userName , assword:$_password');
               userLogin(_userName, _password);
             }
           },
           shape: StadiumBorder(side: BorderSide()),
         ),
+      ),
+    );
+  }
+
+  Padding buildChooseUserDropdownButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          DropdownButton<String>(
+            value: this._userIfLeancloud,
+            onChanged: (String newValue) {
+              setState(() {
+                this._userIfLeancloud = newValue;
+              });
+            },
+            items: <String>['游客登录', 'LeanCloud 员工']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
@@ -211,6 +257,33 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
+  Future saveUserType() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userType', this._userIfLeancloud);
+  }
 
+  Future login(String name, String password) async {
+    LCUser user = await LCUser.login(name, password);
+  }
 
+  Future initLeanCloud() async {
+    if (_userIfLeancloud == '游客登录') {
+      LeanCloud.initialize(
+          'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
+          server: 'https://elawfuk8.lc-cn-n1-shared.com',
+          queryCache: new LCQueryCache());
+
+//      LeanCloud.initialize(
+//          'JMBPc7y4SUPRDrOSHXjXVMN7-gzGzoHsz', 'Wib2dECd48h1FzivFrH628ju',
+//          server: 'https://jmbpc7y4.lc-cn-n1-shared.com',
+//          queryCache: new LCQueryCache());
+//     在 LeanCloud.initialize 初始化之后执行
+//    LCLogger.setLevel(LCLogger.DebugLevel);
+    } else {
+      LeanCloud.initialize('88cqfanr9aztiol6h6fxeiuhioshn6ltb0ste28iwlgigexz',
+          'mncaolv68uzwoftgmg3b8fvbrb4bql1re1epmgblknbyh4b0',
+          server: 'https://88cqfanr.lc-cn-n1-shared.com',
+          queryCache: new LCQueryCache());
+    }
+  }
 }

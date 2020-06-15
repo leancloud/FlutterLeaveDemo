@@ -178,7 +178,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                           .then((response) {
                         showToastGreen('保存成功!');
 
-                      })
+    })
                           .catchError((error) {
                         showToastRed(error);
                       });

@@ -15,7 +15,7 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage> {
   final TelAndSmsService _service = locator<TelAndSmsService>();
 
-  Future<bool> showDeleteConfirmDialog1(String num,String name) async {
+  Future<bool> showDeleteConfirmDialog1(String num, String name) async {
     return showDialog<bool>(
       context: context,
       builder: (context) {
@@ -32,7 +32,8 @@ class _ContactsPageState extends State<ContactsPage> {
               onPressed: () {
                 _service.call(num);
                 //关闭对话框并返回true
-                Navigator.of(context).pop();              },
+                Navigator.of(context).pop();
+              },
             ),
           ],
         );
@@ -50,12 +51,9 @@ class _ContactsPageState extends State<ContactsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-
 //        padding: EdgeInsets.all(2.0),
-        child:
-        FutureBuilder<List<LCObject>>(
+        child: FutureBuilder<List<dynamic>>(
           future: retrieveData(),
-
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             // 请求已结束
             if (snapshot.connectionState == ConnectionState.done) {
@@ -63,7 +61,6 @@ class _ContactsPageState extends State<ContactsPage> {
                 return Text("Error: ${snapshot.error}");
               } else {
                 return ListView.separated(
-
                   //添加分割线
                   separatorBuilder: (BuildContext context, int index) {
                     return new Divider(
@@ -74,7 +71,6 @@ class _ContactsPageState extends State<ContactsPage> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-
                     var data = snapshot.data[index];
                     String name;
                     String username = data['username'];
@@ -91,16 +87,14 @@ class _ContactsPageState extends State<ContactsPage> {
                     return Container(
                       padding: const EdgeInsets.all(10),
                       child: GestureDetector(
-                        onTap: () => showDeleteConfirmDialog1(phoneNum,name),
+                        onTap: () => showDeleteConfirmDialog1(phoneNum, name),
                         child: Row(
                           children: <Widget>[
                             new Expanded(
                               child: new Column(
-
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   new Container(
-
                                     padding: const EdgeInsets.only(
                                         bottom: 8.0, right: 8, left: 10),
                                     child: new Text(
@@ -111,7 +105,6 @@ class _ContactsPageState extends State<ContactsPage> {
                                     ),
                                   ),
                                   new Container(
-
                                     padding: const EdgeInsets.only(
                                         bottom: 8.0, right: 8, left: 10),
                                     child: new Text(
@@ -119,7 +112,6 @@ class _ContactsPageState extends State<ContactsPage> {
                                       style: new TextStyle(
                                         color: Colors.grey[500],
                                       ),
-
                                     ),
                                   ),
                                 ],
@@ -128,8 +120,6 @@ class _ContactsPageState extends State<ContactsPage> {
                           ],
                         ),
                       ),
-
-
                     );
                   },
                 );
@@ -144,10 +134,21 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-  Future<List<LCObject>> retrieveData() async {
-    LCQuery<LCObject> query = LCQuery('_User');
-    query.orderByDescending('createdAt');
-    List<LCObject> users = await query.find();
+  Future<List<dynamic>> retrieveData() async {
+    List<dynamic> users;
+    try {
+      Map<String, dynamic> userMap = await LCCloud.run('queryUser');
+      users = userMap['result'];
+    } on LCException catch (e) {
+      showToastRed(e.message);
+    }
+//    try {
+//      LCQuery<LCObject> query = LCUser.getQuery();
+//      query.orderByDescending('createdAt');
+//      users = await query.find();
+//    }on LCException catch(e){
+//      showToastRed(e.message);
+//    }
     return users;
   }
 }

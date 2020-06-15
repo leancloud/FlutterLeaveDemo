@@ -53,7 +53,7 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                       double duration = data['duration'];
                       String note;
                       if (data['note'] == null || data['note'] =='') {
-                        note = '因为羞羞的原因';
+                        note = '（因为某些羞羞的原因）';
                       } else {
                         note = data['note'];
                       }

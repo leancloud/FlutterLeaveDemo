@@ -318,7 +318,7 @@ Future<LCObject> saveLeave(double duration, int leaveType, DateTime startDate,
   leave['duration'] = duration;
   print('-------note= $note');
   if (note == null || note == '') {
-    leave['note'] = '因为羞羞的原因';
+    leave['note'] = '（因为某些羞羞的原因）';
   } else {
     leave['note'] = note;
   }

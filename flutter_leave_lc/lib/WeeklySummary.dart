@@ -116,11 +116,11 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
       ),
     );
   }
-
   Future<List<LCObject>> retrieveData() async {
     LCQuery<LCObject> query = LCQuery('WeeklyPub');
     query.include('user');
     query.orderByDescending('createdAt');
+    query.whereGreaterThanOrEqualTo('createdAt', DateTime.parse('2020-06-01 00:00:00Z'));
     List<LCObject> weekly = await query.find();
     return weekly;
   }
