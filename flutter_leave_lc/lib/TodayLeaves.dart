@@ -50,7 +50,7 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                       }else{
                         name = realName;
                       }
-                      double duration = data['duration'];
+                      var duration = data['duration'];
                       String note;
                       if (data['note'] == null || data['note'] =='') {
                         note = '（因为某些羞羞的原因）';

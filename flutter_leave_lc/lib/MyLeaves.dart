@@ -44,7 +44,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                       itemBuilder: (context, index) {
                         var data = snapshot.data[index];
                         int type = data['type'];
-                        double duration = data['duration'];
+                        var duration = data['duration'];
                         String note;
                         if (data['note'] == null || data['note'] =='') {
                           note = '（因为某些羞羞的原因）';

@@ -41,7 +41,8 @@ class _MyInformationPageState extends State<MyInformationPage> {
         _controllerPhone.text = '未设置';
       }
     }).catchError((error) {
-      showToastRed(error);
+      showToastRed(error.toString());
+      print(error.toString());
     });
 
     setState(() {});
@@ -93,7 +94,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                         maxLines: 5,
                         minLines: 1,
                         decoration: const InputDecoration(
-                          hintText: '',
+                          hintText: '真实姓名',
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(
@@ -127,7 +128,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                         maxLines: 5,
                         minLines: 1,
                         decoration: const InputDecoration(
-                          hintText: '原因及其他信息',
+                          hintText: '手机号',
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(
@@ -177,9 +178,7 @@ class _MyInformationPageState extends State<MyInformationPage> {
                               this._controllerPhone.text)
                           .then((response) {
                         showToastGreen('保存成功!');
-
-    })
-                          .catchError((error) {
+                      }).catchError((error) {
                         showToastRed(error);
                       });
                       Navigator.pop(context); //销毁 loading
@@ -204,14 +203,22 @@ Future updateProfile(String name, String phoneNumber) async {
   await user.save();
 }
 
-Future<LCObject> getUserData() async {
+Future<dynamic> getUserData() async {
   LCUser user = await LCUser.getCurrent();
+  dynamic currentUser;
+  try {
+    Map<String, dynamic> userMap = await LCCloud.run('queryUser');
+    List<dynamic> users = userMap['result'];
 
-  LCQuery<LCUser> userQuery = LCUser.getQuery();
-  userQuery.whereEqualTo('objectId', user.objectId);
+    for (var obj in users) {
+      if (obj['objectId'] == user.objectId) {
+        currentUser = obj;
+        return currentUser;
+      }
+    }
+  } on LCException catch (e) {
+    showToastRed(e.message);
+  }
 
-  List<LCUser> list = await userQuery.find();
-  LCUser currentUser = list.first;
-
-  return currentUser;
+  return user;
 }
