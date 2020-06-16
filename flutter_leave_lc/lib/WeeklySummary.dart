@@ -43,6 +43,10 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
                   itemBuilder: (context, index) {
                     LCObject data = snapshot.data[index];
                     LCObject user = data['user'];
+                    //周报的 user 指向一个不存在的对象时把这条周报跳过
+                    if (user == null) {
+                      return new Container(height: 0.0, width: 0.0);
+                    }
                     String name;
                     String username = user['username'];
                     String realName = user['realName'];
@@ -57,8 +61,8 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
                     } else {
                       note = data['content'];
                     }
-                    String createdAtString =
-                        formatDate(data.createdAt, [yyyy, "-", mm, "-", dd, " "]);
+                    String createdAtString = formatDate(
+                        data.createdAt, [yyyy, "-", mm, "-", dd, " "]);
 
                     return Container(
                       padding: const EdgeInsets.all(10),
@@ -89,14 +93,14 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
                                   ),
                                 ),
                                 new Container(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 8.0, right: 8, left: 10),
-                                    child: new Text(
-                                      note,
-                                      style: new TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    )),
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8.0, right: 8, left: 10),
+                                  child: MarkdownBody(
+//                                      controller: controller,
+//                                      selectable: true,
+                                      data: note),
+//
+                                ),
                               ],
                             ),
                           ),
@@ -116,11 +120,13 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
       ),
     );
   }
+
   Future<List<LCObject>> retrieveData() async {
     LCQuery<LCObject> query = LCQuery('WeeklyPub');
     query.include('user');
     query.orderByDescending('createdAt');
-    query.whereGreaterThanOrEqualTo('createdAt', DateTime.parse('2020-06-01 00:00:00Z'));
+    query.whereGreaterThanOrEqualTo(
+        'createdAt', DateTime.parse('2020-06-01 00:00:00Z'));
     List<LCObject> weekly = await query.find();
     return weekly;
   }
