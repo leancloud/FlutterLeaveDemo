@@ -33,7 +33,6 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   saveProfile();
   }
   @override
   Widget build(BuildContext context) {
@@ -70,12 +69,5 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
       ),
     );
   }
-}
-
-Future saveProfile() async {
-  final prefs = await SharedPreferences.getInstance();
-  LCUser user = await LCUser.getCurrent();
-  await prefs.setString('username', user.username);
-  await prefs.setString('password', user.password);
 }
 

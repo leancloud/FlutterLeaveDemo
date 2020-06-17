@@ -50,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
     initLeanCloud().then((response) {
       saveUserType(this._userIfLeancloud);
+      saveUserProfile();
       login(name, password).then((value) {
         Navigator.pop(context); //销毁 loading
         Navigator.pushAndRemoveUntil(
@@ -204,6 +205,7 @@ class _LoginPageState extends State<LoginPage> {
       controller: _controllerPassword,
       onSaved: (String value) => _password = value,
       obscureText: _isObscure,
+
       validator: (String value) {
         if (value.isEmpty) {
           return '请输入密码';
@@ -227,7 +229,6 @@ class _LoginPageState extends State<LoginPage> {
               })),
     );
   }
-
   TextFormField buildEmailTextField() {
     return TextFormField(
       controller: _controllerName,
@@ -268,18 +269,16 @@ class _LoginPageState extends State<LoginPage> {
           'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
           server: 'https://elawfuk8.lc-cn-n1-shared.com',
           queryCache: new LCQueryCache());
-
-//      LeanCloud.initialize(
-//          'JMBPc7y4SUPRDrOSHXjXVMN7-gzGzoHsz', 'Wib2dECd48h1FzivFrH628ju',
-//          server: 'https://jmbpc7y4.lc-cn-n1-shared.com',
-//          queryCache: new LCQueryCache());
-//     在 LeanCloud.initialize 初始化之后执行
-//    LCLogger.setLevel(LCLogger.DebugLevel);
     } else {
       LeanCloud.initialize('88cqfanr9aztiol6h6fxeiuhioshn6ltb0ste28iwlgigexz',
           'mncaolv68uzwoftgmg3b8fvbrb4bql1re1epmgblknbyh4b0',
           server: 'https://88cqfanr.lc-cn-n1-shared.com',
           queryCache: new LCQueryCache());
     }
+  }
+  Future saveUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', this._controllerName.text);
+    await prefs.setString('password', this._controllerPassword.text);
   }
 }

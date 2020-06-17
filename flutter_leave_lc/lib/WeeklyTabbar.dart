@@ -12,7 +12,7 @@ class WeeklyTabBarPage extends StatefulWidget {
 class _WeeklyTabBarPageState extends State<WeeklyTabBarPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List _tabs = ["写周报",  "周报汇总"];
+  List _tabs = ["写周报", "周报汇总"];
   List<Widget> _pages = [
     MyWeeklyPage(),
     WeeklySummaryPage(),

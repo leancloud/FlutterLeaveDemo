@@ -142,13 +142,6 @@ class _ContactsPageState extends State<ContactsPage> {
     } on LCException catch (e) {
       showToastRed(e.message);
     }
-//    try {
-//      LCQuery<LCObject> query = LCUser.getQuery();
-//      query.orderByDescending('createdAt');
-//      users = await query.find();
-//    }on LCException catch(e){
-//      showToastRed(e.message);
-//    }
     return users;
   }
 }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:leancloud_storage/leancloud.dart';
 import 'package:date_format/date_format.dart';
 import 'Common/Global.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 //TODO：管理员请假、delete 历史记录
 
 class MyWeeklyPage extends StatefulWidget {
@@ -31,12 +29,14 @@ class _MyWeeklyPageState extends State<MyWeeklyPage> {
             FlatButton(
               child: Text("保存"),
               onPressed: () {
-                saveWeekly(_controller.text).then((response) {
-                }).catchError((error) {
+                saveWeekly(_controller.text)
+                    .then((response) {})
+                    .catchError((error) {
                   showToastRed(error);
                 });
                 //关闭对话框并返回true
-                Navigator.of(context).pop();              },
+                Navigator.of(context).pop();
+              },
             ),
           ],
         );

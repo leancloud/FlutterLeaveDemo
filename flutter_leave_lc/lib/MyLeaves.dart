@@ -116,7 +116,6 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                           ),
                         );
                       },
-//              separatorBuilder: (context, index) => Divider(height: .0),
                     );
 
               }
@@ -135,8 +134,6 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
     query.whereEqualTo('username', user.username);
     query.orderByDescending('createdAt');
     List<LCObject> leaves = await query.find();
-    //更新视图
-//    setState(() {});
     return leaves;
   }
 }

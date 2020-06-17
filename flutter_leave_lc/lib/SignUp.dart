@@ -26,6 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
     initLeanCloud().then((response) {
       saveUserType('游客登录');
 
+      saveUserProfile(name, password);
       signUp(name, password).then((value) {
         login(name, password).then((value) {
           Navigator.pop(context); //销毁 loading
@@ -191,10 +192,15 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future initLeanCloud() async {
-    //注册页面只有游客登录
+    //游客登录
     LeanCloud.initialize(
         'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
         server: 'https://elawfuk8.lc-cn-n1-shared.com',
         queryCache: new LCQueryCache());
+  }
+  Future saveUserProfile(String username,String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
   }
 }

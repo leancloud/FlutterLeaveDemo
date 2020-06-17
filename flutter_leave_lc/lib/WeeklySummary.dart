@@ -95,11 +95,7 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
                                 new Container(
                                   padding: const EdgeInsets.only(
                                       bottom: 8.0, right: 8, left: 10),
-                                  child: MarkdownBody(
-//                                      controller: controller,
-//                                      selectable: true,
-                                      data: note),
-//
+                                  child: MarkdownBody(data: note),
                                 ),
                               ],
                             ),
