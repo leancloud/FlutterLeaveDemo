@@ -58,11 +58,11 @@ class _LoginPageState extends State<LoginPage> {
             new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
             (_) => false);
       }).catchError((error) {
-        showToastRed(error.toString());
+        showToastRed(error.message);
         Navigator.pop(context); //销毁 loading
       });
     }).catchError((error) {
-      showToastRed(error);
+      showToastRed(error.message);
       Navigator.pop(context); //销毁 loading
     });
   }
@@ -205,7 +205,6 @@ class _LoginPageState extends State<LoginPage> {
       controller: _controllerPassword,
       onSaved: (String value) => _password = value,
       obscureText: _isObscure,
-
       validator: (String value) {
         if (value.isEmpty) {
           return '请输入密码';
@@ -229,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
               })),
     );
   }
+
   TextFormField buildEmailTextField() {
     return TextFormField(
       controller: _controllerName,
@@ -257,8 +257,6 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-
-
   Future login(String name, String password) async {
     LCUser user = await LCUser.login(name, password);
   }
@@ -276,6 +274,7 @@ class _LoginPageState extends State<LoginPage> {
           queryCache: new LCQueryCache());
     }
   }
+
   Future saveUserProfile() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', this._controllerName.text);

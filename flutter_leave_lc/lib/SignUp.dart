@@ -35,15 +35,15 @@ class _SignUpPageState extends State<SignUpPage> {
               new MaterialPageRoute(builder: (context) => HomeBottomBarPage()),
               (_) => false);
         }).catchError((error) {
-          showToastRed(error.toString());
+          showToastRed(error.message);
           Navigator.pop(context); //销毁 loading
         });
       }).catchError((error) {
-        showToastRed(error.toString());
+        showToastRed(error.message);
         Navigator.pop(context); //销毁 loading
       });
     }).catchError((error) {
-      showToastRed(error);
+      showToastRed(error.message);
       Navigator.pop(context); //销毁 loading
     });
   }
