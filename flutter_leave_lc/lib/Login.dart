@@ -182,22 +182,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Padding buildForgetPasswordText(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: FlatButton(
-          child: Text(
-            '忘记密码？',
-            style: TextStyle(fontSize: 14.0, color: Colors.grey),
+    Padding content;
+    if (_userIfLeancloud == '游客登录') {
+      content = Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: new Container(height: 0.0, width: 0.0),
+      );
+    } else {
+      content = Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: FlatButton(
+            child: Text(
+              '忘记密码？',
+              style: TextStyle(fontSize: 14.0, color: Colors.grey),
+            ),
+            onPressed: () {
+              showToastGreen('可以去控制台重置密码');
+            },
           ),
-          onPressed: () {
-//            Navigator.pop(context);
-            showToastRed('忘记密码');
-          },
         ),
-      ),
-    );
+      );
+    }
+    return content;
   }
 
   TextFormField buildPasswordTextField(BuildContext context) {

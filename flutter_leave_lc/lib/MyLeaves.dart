@@ -7,13 +7,11 @@ class MyLeavesPage extends StatefulWidget {
   @override
   _MyLeavesPageState createState() => new _MyLeavesPageState();
 }
-
 class _MyLeavesPageState extends State<MyLeavesPage> {
 
   @override
   void initState() {
     super.initState();
-//    retrieveData();
   }
 
   @override

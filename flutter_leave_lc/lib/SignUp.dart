@@ -6,8 +6,6 @@ import 'HomeBottomBar.dart';
 import 'Common/Global.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-//用户注册的时候只要用户名+密码，手机号、邮箱、Realame等在个人中心自己设置
-//eancloud 分支需要去掉注册账号这一步
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -25,7 +23,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
     initLeanCloud().then((response) {
       saveUserType('游客登录');
-
       saveUserProfile(name, password);
       signUp(name, password).then((value) {
         login(name, password).then((value) {
@@ -47,7 +44,6 @@ class _SignUpPageState extends State<SignUpPage> {
       Navigator.pop(context); //销毁 loading
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
