@@ -1,9 +1,11 @@
 
 ## APP 效果预览
 
-预览gif：
+[App Store下载链接](https://apps.apple.com/us/app/id1518553843)，或者 App Store 搜索 `LeanCN` 下载。
 
-App Store下载链接:
+ <img src="http://lc-elawfuk8.cn-n1.lcfile.com/d074ce9b7d1c69bb21d0/WechatIMG457.png" width = "375" height = "812" alt="图片名称" align= center />
+ <img src="http://lc-elawfuk8.cn-n1.lcfile.com/f4de25bebcd5980c6be9/WechatIMG455.png" width = "375" height = "812" alt="图片名称" align= center />
+ <img src="http://lc-elawfuk8.cn-n1.lcfile.com/4305bd10ea39512b2993/WechatIMG456.png" width = "375" height = "812" alt="图片名称" align= center />
 
 ## APP 简介
 
