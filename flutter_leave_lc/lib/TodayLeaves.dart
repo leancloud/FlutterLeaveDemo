@@ -134,7 +134,6 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
   }
 
   Future<List<LCObject>> retrieveData() async {
-    LCUser user = await LCUser.getCurrent();
     LCQuery<LCObject> query = LCQuery('Leave');
     query.whereGreaterThanOrEqualTo('endDate', DateTime.now());
     query.whereLessThanOrEqualTo('startDate', DateTime.now());

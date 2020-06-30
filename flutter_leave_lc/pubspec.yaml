@@ -27,7 +27,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   fluttertoast: ^4.0.1
-  english_words: ^3.1.0
   shared_preferences: ^0.5.7+3
   flutter_markdown: ^0.4.2
   url_launcher: ^5.0.3
@@ -44,7 +43,6 @@ dev_dependencies:
   flutter_localizations:
     sdk: flutter
   fluttertoast: ^4.0.1
-  english_words: ^3.1.0
   shared_preferences: ^0.5.7+3
   flutter_markdown: ^0.4.2
   url_launcher: ^5.0.3

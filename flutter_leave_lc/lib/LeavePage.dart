@@ -292,7 +292,6 @@ class _LeavePageState extends State<LeavePage> {
   }
 }
 
-//保存请假信息
 Future<List<LCObject>> getIrregular(
     DateTime startDate, DateTime endDate) async {
   LCQuery<LCObject> query = LCQuery('Irregular');
@@ -301,7 +300,6 @@ Future<List<LCObject>> getIrregular(
   query.orderByAscending('date');
 
   List<LCObject> irregularDays = await query.find();
-  print('irregularDays 的长度：${irregularDays.length}');
   return irregularDays;
 }
 
@@ -316,7 +314,6 @@ Future<LCObject> saveLeave(double duration, int leaveType, DateTime startDate,
   leave['startDate'] = startDate;
   leave['type'] = leaveType;
   leave['duration'] = duration;
-  print('-------note= $note');
   if (note == null || note == '') {
     leave['note'] = '（因为某些羞羞的原因）';
   } else {
