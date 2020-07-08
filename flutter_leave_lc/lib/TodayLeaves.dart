@@ -57,10 +57,10 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                     }
                     DateTime startDate = data['startDate'];
                     String startDateString =
-                    formatDate(startDate, [mm, "-", dd, " "]);
+                        formatDate(startDate, [mm, "-", dd, " "]);
                     DateTime endDate = data['endDate'];
                     String endDateString =
-                    formatDate(endDate, [mm, "-", dd, " "]);
+                        formatDate(endDate, [mm, "-", dd, " "]);
                     String startTime = data['startTime'];
                     String endTime = data['endTime'];
 
@@ -96,8 +96,8 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                                   ),
                                 ),
                                 new Container(
-                                  padding: const EdgeInsets.only(
-                                      right: 8, left: 10),
+                                  padding:
+                                      const EdgeInsets.only(right: 8, left: 10),
                                   child: new Text(
                                     leaveMessageString,
                                     style: new TextStyle(
@@ -144,8 +144,9 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
 
   Future<List<LCObject>> retrieveData() async {
     LCQuery<LCObject> query = LCQuery('Leave');
-    query.whereGreaterThanOrEqualTo('endDate', DateTime.now());
-    query.whereLessThanOrEqualTo('startDate', DateTime.now());
+    DateTime today = formatDateForYMD(DateTime.now());
+    query.whereGreaterThanOrEqualTo('endDate', today);
+    query.whereLessThanOrEqualTo('startDate', today);
     query.orderByDescending('createdAt');
     query.limit(100);
     List<LCObject> leaves = await query.find();
