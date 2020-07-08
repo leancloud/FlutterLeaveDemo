@@ -137,7 +137,7 @@ class _ContactsPageState extends State<ContactsPage> {
   Future<List<dynamic>> retrieveData() async {
     List<dynamic> users;
     try {
-      Map<String, dynamic> userMap = await LCCloud.run('queryUser');
+      Map<String, dynamic> userMap = await LCCloud.run('queryUsers');
       users = userMap['result'];
     } on LCException catch (e) {
       showToastRed(e.message);

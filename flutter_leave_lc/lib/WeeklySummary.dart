@@ -123,6 +123,7 @@ class _WeeklySummaryPageState extends State<WeeklySummaryPage> {
     query.orderByDescending('createdAt');
     query.whereGreaterThanOrEqualTo(
         'createdAt', DateTime.parse('2020-06-01 00:00:00Z'));
+    query.limit(50);
     List<LCObject> weekly = await query.find();
     return weekly;
   }

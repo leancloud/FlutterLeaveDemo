@@ -207,7 +207,7 @@ Future<dynamic> getUserData() async {
   LCUser user = await LCUser.getCurrent();
   dynamic currentUser;
   try {
-    Map<String, dynamic> userMap = await LCCloud.run('queryUser');
+    Map<String, dynamic> userMap = await LCCloud.run('queryUsers');
     List<dynamic> users = userMap['result'];
 
     for (var obj in users) {

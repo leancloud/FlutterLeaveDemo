@@ -55,9 +55,17 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                     } else {
                       note = data['note'];
                     }
-                    DateTime createdAt = data['startDate'];
-                    String updatedAtString =
-                        formatDate(createdAt, [yyyy, "-", mm, "-", dd, " "]);
+                    DateTime startDate = data['startDate'];
+                    String startDateString =
+                    formatDate(startDate, [mm, "-", dd, " "]);
+                    DateTime endDate = data['endDate'];
+                    String endDateString =
+                    formatDate(endDate, [mm, "-", dd, " "]);
+                    String startTime = data['startTime'];
+                    String endTime = data['endTime'];
+
+                    String leaveMessageString =
+                        '$startDateString$startTime - $endDateString$endTime';
                     return Container(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -87,6 +95,16 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                                     ),
                                   ),
                                 ),
+                                new Container(
+                                  padding: const EdgeInsets.only(
+                                      right: 8, left: 10),
+                                  child: new Text(
+                                    leaveMessageString,
+                                    style: new TextStyle(
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -102,15 +120,6 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
                                     '${duration.toString()} 天',
                                     style: new TextStyle(
                                       fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                new Container(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: new Text(
-                                    updatedAtString,
-                                    style: new TextStyle(
-                                      color: Colors.grey[500],
                                     ),
                                   ),
                                 ),
@@ -138,8 +147,8 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
     query.whereGreaterThanOrEqualTo('endDate', DateTime.now());
     query.whereLessThanOrEqualTo('startDate', DateTime.now());
     query.orderByDescending('createdAt');
+    query.limit(100);
     List<LCObject> leaves = await query.find();
-
     return leaves;
   }
 }
