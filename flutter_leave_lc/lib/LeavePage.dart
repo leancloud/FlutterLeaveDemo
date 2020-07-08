@@ -294,11 +294,13 @@ class _LeavePageState extends State<LeavePage> {
 
 Future<List<LCObject>> getIrregular(
     DateTime startDate, DateTime endDate) async {
-  LCQuery<LCObject> query = LCQuery('Irregular');
-  query.whereLessThan('date', endDate);
-  query.whereGreaterThan('date', startDate);
-  query.orderByAscending('date');
+  startDate = startDate.add(new Duration(hours: 8));
+  endDate = endDate.add(new Duration(hours: 8));
 
+  LCQuery<LCObject> query = LCQuery('Irregular');
+  query.whereLessThanOrEqualTo('date', endDate);
+  query.whereGreaterThanOrEqualTo('date', startDate);
+  query.orderByAscending('date');
   List<LCObject> irregularDays = await query.find();
   return irregularDays;
 }
@@ -341,20 +343,11 @@ Future<double> getDuration(
     String endTime) async {
   startDate = formatDateForYMD(startDate);
   endDate = formatDateForYMD(endDate);
-
-  print(irregularDays.length);
-  print(type);
-  print(startDate.toString());
-  print(startTime);
-  print(endDate.toString());
-  print(endTime);
-
   double duration = 0;
   duration = endDate.difference(startDate).inDays.toDouble();
 
   if (type == 2 || type == 3 || type == 4 || type == 5) {
     // 产假/产检/婚假 需要算上周末和法定假日
-    duration = duration + 1;
     if (startDate == endDate) {
       // startTime == 'PM' is meaningless
       if (startTime == 'PM') {
@@ -374,7 +367,6 @@ Future<double> getDuration(
 
     return duration;
   }
-// calc not including start and end
   for (DateTime m = startDate;
       m.isBefore(endDate);
       m = m.add(new Duration(days: 1))) {
@@ -385,25 +377,32 @@ Future<double> getDuration(
       duration = duration - 1;
     }
     // - irregular
+    print('irregularDays：--666: ${irregularDays.length} ');
+
     if (irregularDays.length != 0) {
       for (int i = 0; i < irregularDays.length; i++) {
         DateTime dates = irregularDays[i]['date'];
         DateTime date = formatDateForYMD(dates);
         bool holiday = irregularDays[i]['holiday'];
+        print('duration--666: $duration ');
 
         if (date != null && isSameDay(m, date)) {
           if (!isWeekend(m) && holiday == true) {
             duration = duration - 1;
+            print('duration--0000000: $duration ');
           } else if (isWeekend(m) && holiday != true) {
             duration = duration + 1;
+            print('duration--5555555: $duration ');
           }
         }
       }
     }
   }
+
   bool startinirregular = false;
   bool endinirregular = false;
   if (irregularDays.length != 0) {
+    print('irregularDays：--88: ${irregularDays.length} ');
     for (int j = 0; j < irregularDays.length; j++) {
       DateTime dates = irregularDays[j]['date'];
       DateTime date = formatDateForYMD(dates);
@@ -413,16 +412,19 @@ Future<double> getDuration(
         if (!holiday) {
           if (startTime == 'PM') {
             duration += 0.5;
+            print('duration--22: $duration ');
           } else {
-            duration = duration + 1;
+            duration++;
           }
         }
       }
+
       if (isSameDay(endDate, date)) {
         endinirregular = true;
         if (!holiday) {
           if (endTime == 'PM') {
             duration += 0.5;
+            print('duration--33: $duration ');
           }
         }
       }
@@ -432,10 +434,7 @@ Future<double> getDuration(
   if (!startinirregular) {
     if (!isWeekend(startDate)) {
       if (startTime == 'PM') {
-        duration += 0.5;
-      } else {
-//        duration += 1;
-
+        duration -= 0.5;
       }
     }
   }
