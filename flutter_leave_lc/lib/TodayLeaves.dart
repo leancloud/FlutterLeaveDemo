@@ -143,13 +143,29 @@ class _TodayLeavesPageState extends State<TodayLeavesPage> {
   }
 
   Future<List<LCObject>> retrieveData() async {
-    LCQuery<LCObject> query = LCQuery('Leave');
     DateTime today = formatDateForYMD(DateTime.now());
-    query.whereGreaterThanOrEqualTo('endDate', today);
-    query.whereLessThanOrEqualTo('startDate', today);
+    DateTime tomorrow = today.add(new Duration(days: 1));
+    DateTime todayBeijingTime = today.add(new Duration(hours: 8));
+
+    //第一种情况查询今天在开始截止日期中间
+    LCQuery<LCObject> query1 = LCQuery('Leave');
+    query1.whereGreaterThan('endDate', tomorrow);
+    query1.whereLessThan('startDate', today);
+
+    //第二种：截止日期是今天下午
+    LCQuery<LCObject> query2 = LCQuery('Leave');
+    query2.whereEqualTo('endDate', todayBeijingTime);
+    query2.whereEqualTo('endTime', 'PM');
+
+    //第三种：开始日期是今天（上午或下午）
+    LCQuery<LCObject> query3 = LCQuery('Leave');
+    query3.whereEqualTo('startDate', todayBeijingTime);
+
+    LCQuery<LCObject> query = LCQuery.or([query1, query2, query3]);
     query.orderByDescending('createdAt');
     query.limit(100);
     List<LCObject> leaves = await query.find();
+
     return leaves;
   }
 }

@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerName = new TextEditingController();
   final TextEditingController _controllerPassword = new TextEditingController();
+
   String _userIfLeancloud = '游客登录';
   final _formKey = GlobalKey<FormState>();
   String _userName, _password;
@@ -32,6 +33,10 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String name = prefs.getString('username');
     String userType = prefs.getString('userType');
+    if(userType !=null || userType != ''){
+      setState(() {
+      });
+    }
 
     if (name != null) {
       _controllerName.text = name;

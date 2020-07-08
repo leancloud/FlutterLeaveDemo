@@ -254,12 +254,18 @@ class _LeavePageState extends State<LeavePage> {
                             this._isButtonPressed = false;
                             return;
                           }
+                          DateTime startDateFinal =
+                              formatDateForYMD(this._startDate)
+                                  .add(new Duration(hours: 8));
+                          DateTime endDateFinal =
+                              formatDateForYMD(this._endDate)
+                                  .add(new Duration(hours: 8));
                           saveLeave(
                                   duration,
                                   getVacationTypeInt(this._leaveType),
-                                  formatDateForYMD(this._startDate),
+                                  startDateFinal,
                                   this._dropdownStartTime,
-                                  formatDateForYMD(this._endDate),
+                                  endDateFinal,
                                   this._dropdownEndTime,
                                   this._controller.text)
                               .then((response) {
