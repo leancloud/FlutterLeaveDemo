@@ -143,7 +143,6 @@ class AdminAllLeaveHistoryPageState extends State<AdminAllLeaveHistoryPage> {
   }
 
   Future<List<LCObject>> retrieveData() async {
-
     LCQuery<LCObject> query = LCQuery('Leave');
     query.orderByDescending('createdAt');
     query.limit(100);

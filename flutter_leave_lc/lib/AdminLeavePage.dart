@@ -317,6 +317,7 @@ class _AdminLeavePageState extends State<AdminLeavePage> {
                                   this._dropdownEndTime,
                                   this._controller.text)
                               .then((response) {
+                                sendEmail(response);
                             this._isButtonPressed = false;
                           }).catchError((error) {
                             showToastRed(error);
@@ -344,7 +345,36 @@ class _AdminLeavePageState extends State<AdminLeavePage> {
       ),
     );
   }
-
+  Future sendEmail(LCObject leave) async {
+    LCUser user = await LCUser.getCurrent();
+    String userRN = user['realName'];
+    String startTime = time2cn(leave['startTime']);
+    String endTime = time2cn(leave['endTime']);
+    DateTime startDate = leave['startDate'];
+    DateTime endDate = leave['endDate'];
+    String note = leave['note'];
+    if (note == null || note == '') {
+      note = getEmojiString();
+    }
+    String leaveType = getVacationTypeString(leave['type']);
+    double duration = leave['duration'];
+    String endDateString = formatDate(endDate, ['yyyy', '-', 'mm', '-', 'dd']);
+    String startDateString =formatDate(startDate, ['yyyy', '-', 'mm', '-', 'dd']);
+    if (userRN == null) {
+      userRN = user.username;
+    }
+    String subject =
+        '由管理员$userRN添加：$_leavePerson 从 $startDateString$startTime 到 $endDateString$endTime 请 $duration 天 $leaveType';
+    try {
+      Map response = await LCCloud.run('sendLeaveEmail', params: {
+        'from': '${user.username}@leancloud.rocks',
+        'subject': subject,
+        'text': note
+      });
+    } on LCException catch (e) {
+      showToastRed(e.message);
+    }
+  }
   Future<List<LCObject>> getIrregular(
       DateTime startDate, DateTime endDate) async {
     startDate = startDate.add(new Duration(hours: 8));
@@ -372,7 +402,10 @@ class _AdminLeavePageState extends State<AdminLeavePage> {
   Future<LCObject> saveLeave(double duration, int leaveType, DateTime startDate,
       String startTime, DateTime endDate, String endTime, String note) async {
     LCUser user = await LCUser.getCurrent();
-
+    String userRN = user['realName'];
+    if (userRN == null) {
+      userRN = user.username;
+    }
     LCObject leave = LCObject("Leave");
     leave['startTime'] = startTime;
     leave['endTime'] = endTime;
@@ -384,7 +417,7 @@ class _AdminLeavePageState extends State<AdminLeavePage> {
     //管理员请假不需要 realName
     leave['realName'] = '';
     if (note == null || note == '') {
-      leave['note'] = '（由管理员${user.username}添加）';
+      leave['note'] = '（由管理员$userRN添加）';
     } else {
       leave['note'] = note;
     }
