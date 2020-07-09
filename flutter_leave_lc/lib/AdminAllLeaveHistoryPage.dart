@@ -3,12 +3,12 @@ import 'package:leancloud_storage/leancloud.dart';
 import 'Common/Global.dart';
 import 'package:date_format/date_format.dart';
 
-class MyLeavesPage extends StatefulWidget {
+class AdminAllLeaveHistoryPage extends StatefulWidget {
   @override
-  _MyLeavesPageState createState() => new _MyLeavesPageState();
+  AdminAllLeaveHistoryPageState createState() => new AdminAllLeaveHistoryPageState();
 }
 
-class _MyLeavesPageState extends State<MyLeavesPage> {
+class AdminAllLeaveHistoryPageState extends State<AdminAllLeaveHistoryPage> {
   @override
   void initState() {
     super.initState();
@@ -40,6 +40,14 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                   itemBuilder: (context, index) {
                     var data = snapshot.data[index];
                     int type = data['type'];
+                    String name;
+                    String username = data['username'];
+                    String realName = data['realName'];
+                    if (realName == null || realName == '') {
+                      name = username;
+                    } else {
+                      name = realName;
+                    }
                     var duration = data['duration'];
                     String note;
                     if (data['note'] == null || data['note'] == '') {
@@ -49,20 +57,18 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                     }
                     DateTime startDate = data['startDate'];
                     String startDateString =
-                        formatDate(startDate, [mm, "-", dd, " "]);
+                    formatDate(startDate, [mm, "-", dd, " "]);
                     DateTime endDate = data['endDate'];
                     String endDateString =
-                        formatDate(endDate, [mm, "-", dd, " "]);
+                    formatDate(endDate, [mm, "-", dd, " "]);
                     String startTime = data['startTime'];
                     String endTime = data['endTime'];
 
                     String leaveMessageString =
                         '$startDateString$startTime - $endDateString$endTime';
-
                     return Container(
                       padding: const EdgeInsets.all(10),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Expanded(
                             flex: 2,
@@ -73,7 +79,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                   padding: const EdgeInsets.only(
                                       bottom: 8.0, right: 8, left: 10),
                                   child: new Text(
-                                    getVacationTypeString(type),
+                                    '$name ${getVacationTypeString(type)}',
                                     style: new TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -91,7 +97,7 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
                                 ),
                                 new Container(
                                   padding:
-                                      const EdgeInsets.only(right: 8, left: 10),
+                                  const EdgeInsets.only(right: 8, left: 10),
                                   child: new Text(
                                     leaveMessageString,
                                     style: new TextStyle(
@@ -137,12 +143,12 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
   }
 
   Future<List<LCObject>> retrieveData() async {
-    LCUser user = await LCUser.getCurrent();
+
     LCQuery<LCObject> query = LCQuery('Leave');
-    query.whereEqualTo('username', user.username);
     query.orderByDescending('createdAt');
     query.limit(100);
     List<LCObject> leaves = await query.find();
+
     return leaves;
   }
 }

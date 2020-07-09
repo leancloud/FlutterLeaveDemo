@@ -42,18 +42,12 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-//    retrieveData();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
 //        padding: EdgeInsets.all(2.0),
         child: FutureBuilder<List<dynamic>>(
-          future: retrieveData(),
+          future: queryUsers(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             // 请求已结束
             if (snapshot.connectionState == ConnectionState.done) {
@@ -134,7 +128,7 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-  Future<List<dynamic>> retrieveData() async {
+  Future<List<dynamic>> queryUsers() async {
     List<dynamic> users;
     try {
       Map<String, dynamic> userMap = await LCCloud.run('queryUsers');

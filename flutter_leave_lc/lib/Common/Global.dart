@@ -5,6 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_format/date_format.dart';
 import 'ServiceLocator.dart';
 
+String getEmojiString() {
+  Runes input = new Runes('（因为某些羞羞的原因\u{1F60A}）');
+  String emojiString = String.fromCharCodes(input);
+  return emojiString;
+}
+
 String getVacationTypeString(int type) {
   //['带薪休假或事假', '病假', '婚假', '产假', '产检假', '陪产假']
   switch (type) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapplc/Common/Global.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'package:flutterapplc/WeeklyTabbar.dart';
 import 'LeavePage.dart';
@@ -8,6 +9,7 @@ import 'Contacts.dart';
 import 'LeaveTabBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:leancloud_storage/leancloud.dart';
+import 'AdminTabPage.dart';
 
 class HomeBottomBarPage extends StatefulWidget {
   @override
@@ -16,6 +18,8 @@ class HomeBottomBarPage extends StatefulWidget {
 
 class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
   int _currentIndex = 0; //记录当前选中的页面
+  bool _isAdmin = false;
+  bool _isAdminButtonPressed = false;
 
   List<Widget> _pages = [
     LeaveTabPage(),
@@ -31,9 +35,65 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    queryProfile();
   }
+
+  queryProfile() async {
+    _isAdmin = false;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String name = prefs.getString('username');
+    String userType = prefs.getString('userType');
+    if (userType == 'LeanCloud 员工') {
+      if (name == 'xsui') {
+        _isAdmin = true;
+      }
+    } else {
+      _isAdmin = false;
+    }
+    setState(() {});
+  }
+
+  Align navRightButton(BuildContext context) {
+    Align content;
+    if (_isAdmin == false) {
+      content = Align(
+        alignment: Alignment.center,
+        child: new Container(height: 0.0, width: 0.0),
+      );
+    } else {
+      content = Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.only(top: 0.0),
+          child: IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                _isAdminButtonPressed = !_isAdminButtonPressed;
+                if (_isAdminButtonPressed) {
+                  showToastGreen('管理员模式');
+                  _pages = [
+                    AdminTabPage(),
+                    WeeklyTabBarPage(),
+                    ContactsPage(),
+                  ];
+                  setState(() {});
+                } else {
+                  showToastGreen('非管理员模式');
+                  _pages = [
+                    LeaveTabPage(),
+                    WeeklyTabBarPage(),
+                    ContactsPage(),
+                  ];
+                  setState(() {});
+                }
+              }),
+        ),
+      );
+    }
+    return content;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,9 +101,9 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
         //导航栏
         title: Text("LeanCloud"),
         centerTitle: true,
+        //导航栏右侧菜单
         actions: <Widget>[
-          //导航栏右侧菜单
-//          IconButton(icon: Icon(Icons.share), onPressed: () {}),
+          navRightButton(context),
         ],
       ),
       drawer: new MyInformationPage(), //抽屉
@@ -70,4 +130,3 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
     );
   }
 }
-
