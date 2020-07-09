@@ -4,8 +4,6 @@ import 'package:date_format/date_format.dart';
 import 'Common/Global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//TODO：管理员请假、delete 历史记录
-
 class LeavePage extends StatefulWidget {
   LeavePage({Key key}) : super(key: key);
   _LeavePageState createState() => _LeavePageState();

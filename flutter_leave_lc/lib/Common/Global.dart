@@ -12,7 +12,6 @@ String getEmojiString() {
 }
 
 String getVacationTypeString(int type) {
-  //['带薪休假或事假', '病假', '婚假', '产假', '产检假', '陪产假']
   switch (type) {
     case 0:
       return '病假';

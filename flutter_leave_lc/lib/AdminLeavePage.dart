@@ -283,6 +283,11 @@ class _AdminLeavePageState extends State<AdminLeavePage> {
                         this._isButtonPressed = false;
                         return;
                       }
+                      if(this._leavePerson =='所有人'){
+                        showToastRed('未选择请假人！');
+                        this._isButtonPressed = false;
+                        return;
+                      }
 
                       CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
                       //返回所有 IrregularDays

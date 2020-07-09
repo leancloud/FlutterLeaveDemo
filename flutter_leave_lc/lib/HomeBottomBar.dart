@@ -45,7 +45,10 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
     String name = prefs.getString('username');
     String userType = prefs.getString('userType');
     if (userType == 'LeanCloud 员工') {
-      if (name == 'hwang' || name == 'mwu') {
+//      if (name == 'hwang' || name == 'mwu') {
+//        _isAdmin = true;
+//      }
+      if (name == 'xsui') {
         _isAdmin = true;
       }
     } else {

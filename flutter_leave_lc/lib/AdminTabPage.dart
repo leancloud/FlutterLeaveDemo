@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'AdminLeavePage.dart';
-import 'AdminHolidayPage.dart';
 import 'AdminAllLeaveHistoryPage.dart';
 
 class AdminTabPage extends StatefulWidget {
@@ -11,11 +10,10 @@ class AdminTabPage extends StatefulWidget {
 class _AdminTabPageState extends State<AdminTabPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List _tabs = ['补假', '全员请假记录', '节假日管理'];
+  List _tabs = ['补假', '全员请假记录'];
   List<Widget> _pages = [
     AdminLeavePage(),
     AdminAllLeaveHistoryPage(),
-    AdminHolidayPage()
   ];
   @override
   void initState() {
