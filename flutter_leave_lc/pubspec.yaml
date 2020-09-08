@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
-  leancloud_storage: ^0.2.9
+  leancloud_storage: ^0.4.3
   http: ^0.12.0+4
   date_format: ^1.0.8
   flutter_localizations:
@@ -38,7 +38,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http: ^0.12.0+4
-  leancloud_storage: ^0.2.9
+  leancloud_storage: ^0.4.3
   date_format: ^1.0.8
   flutter_localizations:
     sdk: flutter
