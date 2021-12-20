@@ -3,7 +3,7 @@
 
 [App Store下载链接](https://apps.apple.com/us/app/id1518553843)，或者 App Store 搜索 `LeanCN` 下载。
 
-<img src="http://lc-elawfuk8.cn-n1.lcfile.com/d074ce9b7d1c69bb21d0/WechatIMG457.png" width = "250" height = "541" />--  <img src="http://lc-elawfuk8.cn-n1.lcfile.com/f4de25bebcd5980c6be9/WechatIMG455.png" width = "250" height = "541" />-- <img src="http://lc-elawfuk8.cn-n1.lcfile.com/4305bd10ea39512b2993/WechatIMG456.png" width = "250" height = "541" /> 
+<img src="https://flutter-rtm-files.lncld.net/dhQxzF2VlcM4unhI36nxD7b30Sbe8M1S/flutter-acn-overview.png" width = "250" height = "541" />--  <img src="https://flutter-rtm-files.lncld.net/qD0CRrktnhoeqQuhoROubmpBxsRdwkYb/flutter-acn-overview2.png" width = "250" height = "541" />-- <img src="https://flutter-rtm-files.lncld.net/CEBmKgFh7txk3xc963XCv3jrxnm8bzY7/flutter-acn-overview3.png" width = "250" height = "541" /> 
 <br/>
 
 ## APP 简介
@@ -86,7 +86,8 @@ Future initLeanCloud() async {
 
 客户端保存数据时，如果 Class 不存在，系统也会自动生成对应的 Class。
 
-<div align=center><img src="http://lc-elawfuk8.cn-n1.lcfile.com/a9dbc6ee7a17f0d80bda/Snip20200623_8.png"style="transform: translate(-50%, -50%); height: 100%;"/> </div>
+<div align=center><img src="https://flutter-rtm-files.lncld.net/7t9x6qaxJU1VVBl6evRx977IhQrjfi2k/flutter-acn-class.png"style="transform: translate(-50%, -50%); height: 100%;"/> </div>
+
 ## 登录与注册模块
 
 LeanCloud 提供了 LCUser 类来方便使用用户管理的功能，在控制台对应 _User 表。注册与登录选择了 **用户名+密码** 的方式。实现用户注册只需要执行以下代码，就会在 _User 表新增一条用户数据：
