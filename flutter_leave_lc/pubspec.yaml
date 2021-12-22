@@ -21,25 +21,21 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
-  leancloud_storage: ^0.4.3
-  http: ^0.12.0+4
-  date_format: ^1.0.8
+  leancloud_storage: ^0.7.7
+  http: ^0.13.4
+  date_format: ^2.0.4
   flutter_localizations:
     sdk: flutter
-  fluttertoast: ^4.0.1
-  shared_preferences: ^0.5.7+3
-  flutter_markdown: ^0.4.2
-  url_launcher: ^5.0.3
-  get_it: ^1.0.3+2
+  fluttertoast: ^8.0.8
+  shared_preferences: ^2.0.11
+  flutter_markdown: ^0.6.9
+  url_launcher: ^6.0.17
+  get_it: ^7.2.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
-
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

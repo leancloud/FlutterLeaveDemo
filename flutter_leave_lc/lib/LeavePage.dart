@@ -270,15 +270,15 @@ class _LeavePageState extends State<LeavePage> {
                             sendEmail(response);
                             this._isButtonPressed = false;
                           }).catchError((error) {
-                            showToastRed(error);
+                            showToastRed("报错1：" + error.toString());
                             this._isButtonPressed = false;
                           });
                         }).catchError((error) {
-                          showToastRed(error);
+                          showToastRed("报错2：" + error.toString());
                           this._isButtonPressed = false;
                         });
                       }).catchError((error) {
-                        showToastRed(error);
+                        showToastRed("Irregular 查询报错：" + error.toString());
                         this._isButtonPressed = false;
                       });
 

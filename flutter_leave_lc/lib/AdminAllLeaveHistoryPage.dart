@@ -5,7 +5,8 @@ import 'package:date_format/date_format.dart';
 
 class AdminAllLeaveHistoryPage extends StatefulWidget {
   @override
-  AdminAllLeaveHistoryPageState createState() => new AdminAllLeaveHistoryPageState();
+  AdminAllLeaveHistoryPageState createState() =>
+      new AdminAllLeaveHistoryPageState();
 }
 
 class AdminAllLeaveHistoryPageState extends State<AdminAllLeaveHistoryPage> {
@@ -26,6 +27,11 @@ class AdminAllLeaveHistoryPageState extends State<AdminAllLeaveHistoryPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
+              } else if (snapshot.data == null) {
+                return Text("没有数据",
+                    style: new TextStyle(
+                      color: Colors.grey,
+                    ));
               } else {
                 return ListView.separated(
                   //添加分割线
@@ -57,10 +63,10 @@ class AdminAllLeaveHistoryPageState extends State<AdminAllLeaveHistoryPage> {
                     }
                     DateTime startDate = data['startDate'];
                     String startDateString =
-                    formatDate(startDate, [mm, "-", dd, " "]);
+                        formatDate(startDate, [mm, "-", dd, " "]);
                     DateTime endDate = data['endDate'];
                     String endDateString =
-                    formatDate(endDate, [mm, "-", dd, " "]);
+                        formatDate(endDate, [mm, "-", dd, " "]);
                     String startTime = data['startTime'];
                     String endTime = data['endTime'];
 
@@ -97,7 +103,7 @@ class AdminAllLeaveHistoryPageState extends State<AdminAllLeaveHistoryPage> {
                                 ),
                                 new Container(
                                   padding:
-                                  const EdgeInsets.only(right: 8, left: 10),
+                                      const EdgeInsets.only(right: 8, left: 10),
                                   child: new Text(
                                     leaveMessageString,
                                     style: new TextStyle(

@@ -104,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
         child: RaisedButton(
           child: Text(
             '注册',
-            style: Theme.of(context).primaryTextTheme.headline,
+            style: Theme.of(context).primaryTextTheme.headline6,
           ),
           color: Colors.black,
           onPressed: () {
@@ -191,7 +191,7 @@ class _SignUpPageState extends State<SignUpPage> {
     //游客登录
     LeanCloud.initialize(
         'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
-        server: 'https://acn.iwxnews.com',
+        server: 'https://elawfuk8.lc-cn-n1-shared.com',
         queryCache: new LCQueryCache());
   }
   Future saveUserProfile(String username,String password) async {

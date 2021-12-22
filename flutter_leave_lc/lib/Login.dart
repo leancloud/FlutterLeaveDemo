@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
         child: RaisedButton(
           child: Text(
             'Login',
-            style: Theme.of(context).primaryTextTheme.headline,
+            style: Theme.of(context).primaryTextTheme.headline6,
           ),
           color: Colors.black,
           onPressed: () {
@@ -278,12 +278,12 @@ class _LoginPageState extends State<LoginPage> {
     if (_userIfLeancloud == '游客登录') {
       LeanCloud.initialize(
           'eLAwFuK8k3eIYxh29VlbHu2N-gzGzoHsz', 'G59fl4C1uLIQVR4BIiMjxnM3',
-          server: 'https://acn.iwxnews.com',
+          server: 'https://elawfuk8.lc-cn-n1-shared.com',
           queryCache: new LCQueryCache());
     } else {
       LeanCloud.initialize('88cqfanr9aztiol6h6fxeiuhioshn6ltb0ste28iwlgigexz',
           'mncaolv68uzwoftgmg3b8fvbrb4bql1re1epmgblknbyh4b0',
-          server: 'https://acn.iwxnews.com',
+          server: 'https://88cqfanr.lc-cn-n1-shared.com',
           queryCache: new LCQueryCache());
     }
   }

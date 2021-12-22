@@ -53,6 +53,11 @@ class _ContactsPageState extends State<ContactsPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
+              } else if (snapshot.data == null) {
+                return Text("没有数据",
+                    style: new TextStyle(
+                      color: Colors.grey,
+                    ));
               } else {
                 return ListView.separated(
                   //添加分割线

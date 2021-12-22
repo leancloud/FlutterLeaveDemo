@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import './TelAndSmsService.dart';
+final locator = GetIt.instance;
 
-GetIt locator = GetIt();
 void setupLocator() {
   locator.registerSingleton(TelAndSmsService());
 }

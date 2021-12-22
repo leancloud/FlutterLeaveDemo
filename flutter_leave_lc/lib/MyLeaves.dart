@@ -26,6 +26,11 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
+              } else if (snapshot.data == null) {
+                return Text("没有数据",
+                    style: new TextStyle(
+                      color: Colors.grey,
+                    ));
               } else {
                 return ListView.separated(
                   //添加分割线
@@ -137,12 +142,17 @@ class _MyLeavesPageState extends State<MyLeavesPage> {
   }
 
   Future<List<LCObject>> retrieveData() async {
-    LCUser user = await LCUser.getCurrent();
-    LCQuery<LCObject> query = LCQuery('Leave');
-    query.whereEqualTo('username', user.username);
-    query.orderByDescending('createdAt');
-    query.limit(100);
-    List<LCObject> leaves = await query.find();
+    List<LCObject> leaves;
+    try {
+      LCUser user = await LCUser.getCurrent();
+      LCQuery<LCObject> query = LCQuery('Leave');
+      query.whereEqualTo('username', user.username);
+      query.orderByDescending('createdAt');
+      query.limit(100);
+      leaves = await query.find();
+    } on LCException catch (e) {
+      showToastRed(e.message);
+    }
     return leaves;
   }
 }
