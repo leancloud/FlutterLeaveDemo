@@ -3,11 +3,16 @@
 
 [App Store下载链接](https://apps.apple.com/us/app/id1518553843)，或者 App Store 搜索 `LeanCN` 下载。
 
-<img src="https://flutter-rtm-files.lncld.net/dhQxzF2VlcM4unhI36nxD7b30Sbe8M1S/flutter-acn-overview.png" width = "250" height = "541" />--  <img src="https://flutter-rtm-files.lncld.net/qD0CRrktnhoeqQuhoROubmpBxsRdwkYb/flutter-acn-overview2.png" width = "250" height = "541" />-- <img src="https://flutter-rtm-files.lncld.net/CEBmKgFh7txk3xc963XCv3jrxnm8bzY7/flutter-acn-overview3.png" width = "250" height = "541" /> 
-<br/>
+
+| 请假  | 写周报 | 联系人|
+|:-------------:|:---------------:|:-------------:|
+|![flutter-acn-overview](https://user-images.githubusercontent.com/11917002/156492081-1737d47a-41d1-4778-a9ec-7e6634189982.png)   | ![flutter-acn-overview2](https://user-images.githubusercontent.com/11917002/156492119-2c10d857-5f58-4171-b631-3f3060e3e88d.png) |     ![flutter-acn-overview3](https://user-images.githubusercontent.com/11917002/156492149-6344e63b-1758-4751-99f1-b8ee7e1b986f.png) |
+
 
 ## APP 简介
+
 用 Flutter 快速实现请假与写周报 APP。
+
 
 公司使用的请假及写周报系统一直都是网页版的，之前我们也有想过出一个移动端版本，但因为一些原因没有付诸行动。刚好最近 LeanCloud 新发布了 Flutter SDK，就决定用 Flutter 来开发这款 APP。
 
@@ -88,7 +93,10 @@ Future initLeanCloud() async {
 
 客户端保存数据时，如果 Class 不存在，系统也会自动生成对应的 Class。
 
-<div align=center><img src="https://flutter-rtm-files.lncld.net/7t9x6qaxJU1VVBl6evRx977IhQrjfi2k/flutter-acn-class.png"style="transform: translate(-50%, -50%); height: 100%;"/> </div>
+
+![flutter-acn-class](https://user-images.githubusercontent.com/11917002/156491926-8f43df44-a48a-46bc-83d3-c8946b0e8411.png)
+
+
 
 ## 登录与注册模块
 
