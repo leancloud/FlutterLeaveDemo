@@ -68,6 +68,7 @@ class _LeavePageState extends State<LeavePage> {
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 22.0),
           children: <Widget>[
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

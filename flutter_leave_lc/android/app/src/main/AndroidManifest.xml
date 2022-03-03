@@ -1,11 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutterapplc">
+    package="com.example.flutterapplc"
+    android:versionCode="1"
+    android:versionName="1.0.0">
     <!-- 基本模块（必须）START -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- 基本模块 END -->
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -13,16 +13,19 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name=".MyApp"
         android:label="LeanCN"
-        android:icon="@mipmap/ic_launcher">
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:icon="@mipmap/ic_launcher"
+      >
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -33,5 +36,34 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <service
+            android:name="com.vivo.push.sdk.service.CommandClientService"
+            android:permission="com.push.permission.UPSTAGESERVICE"
+            android:exported="true"/>
+
+        <activity
+            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- push应用定义消息receiver声明 -->
+        <receiver android:name=".MyPushMessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <!-- 接收push消息 -->
+                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="936bf546ba881586e1791a006935deba" />
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="105541137" />
+
+        <!--vivo Push SDK的版本信息-->
+        <meta-data
+            android:name="sdk_version_vivo"
+            android:value="484"/>
     </application>
 </manifest>

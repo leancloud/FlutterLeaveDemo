@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutterapplc/Login.dart';
 import 'package:leancloud_storage/leancloud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Common/Global.dart';
+
+
 
 //TODO 手机号、邮箱、RealName
 class MyInformationPage extends StatefulWidget {
@@ -12,7 +15,6 @@ class MyInformationPage extends StatefulWidget {
 class _MyInformationPageState extends State<MyInformationPage> {
   final TextEditingController _controllerRealName = new TextEditingController();
   final TextEditingController _controllerPhone = new TextEditingController();
-  final TextEditingController _controllerPhone2 = new TextEditingController();
 
   String _name = '暂无';
 
@@ -187,38 +189,174 @@ class _MyInformationPageState extends State<MyInformationPage> {
                 ],
               ),
             ),
+            new Container(
+              margin: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.blue,
+                    highlightColor: Colors.blue,
+                    colorBrightness: Brightness.dark,
+                    splashColor: Colors.grey,
+                    child: Text("退出登录"),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    onPressed: () {
+                      showConfirmDialog();
+                    },
+                  )
+                ],
+              ),
+            ),
+            new Container(
+              margin: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.blue,
+                    highlightColor: Colors.blue,
+                    colorBrightness: Brightness.dark,
+                    splashColor: Colors.grey,
+                    child: Text("注销账号"),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    onPressed: () {
+                      showConfirmDialog_cancel();
+                    },
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),
     ));
   }
-}
+  Future<bool> showConfirmDialog_cancel() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("提示"),
+          content: Text("确认注销账号吗"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("取消"),
+              onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+            ),
+            FlatButton(
+              child: Text("确认"),
+              onPressed: () {
+                //Client close；
+                //关闭对话框并返回true
+                clientCancel();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<bool> showConfirmDialog() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("提示"),
+          content: Text("确认退出登录"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("取消"),
+              onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+            ),
+            FlatButton(
+              child: Text("确认"),
+              onPressed: () {
+                //Client close；
+                //关闭对话框并返回true
+                clientClose();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  //退出
+  Future clientCancel() async {
+    CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
 
-Future updateProfile(String name, String phoneNumber) async {
-  LCUser user = await LCUser.getCurrent();
-
-  user['mobilePhoneNumber'] = phoneNumber;
-  user['realName'] = name;
-
-  await user.save();
-}
-
-Future<dynamic> getUserData() async {
-  LCUser user = await LCUser.getCurrent();
-  dynamic currentUser;
-  try {
-    Map<String, dynamic> userMap = await LCCloud.run('queryUsers');
-    List<dynamic> users = userMap['result'];
-
-    for (var obj in users) {
-      if (obj['objectId'] == user.objectId) {
-        currentUser = obj;
-        return currentUser;
-      }
+    cancel().then((value) {
+      Navigator.pop(context); //销毁 loading
+      Navigator.pushAndRemoveUntil(
+          context,
+          new MaterialPageRoute(builder: (context) => LoginPage()),
+              (_) => false);
+    }).catchError((error) {
+      showToastRed(error.message);
+      Navigator.pop(context); //销毁 loading
+    });
+  }
+//退出
+  Future clientClose() async {
+    CommonUtil.showLoadingDialog(context); //发起请求前弹出loading
+    close().then((value) {
+    Navigator.pop(context); //销毁 loading
+    Navigator.pushAndRemoveUntil(
+    context,
+    new MaterialPageRoute(builder: (context) => LoginPage()),
+    (_) => false);
+    }).catchError((error) {
+    showToastRed(error.message);
+    Navigator.pop(context); //销毁 loading
+    });
+  }
+  Future close() async {
+    LCUser user = await LCUser.getCurrent();
+    if (user != null) {
+      await LCUser.logout();
+    } else {
+      showToastRed('有 BUG，重启一下试试。。。');
     }
-  } on LCException catch (e) {
-    showToastRed(e.message);
+  }
+  Future cancel() async {
+    LCUser user = await LCUser.getCurrent();
+    if (user != null) {
+      await user.delete();
+    } else {
+      showToastRed('有 BUG，重启一下试试。。。');
+    }
+  }
+  Future updateProfile(String name, String phoneNumber) async {
+    LCUser user = await LCUser.getCurrent();
+    user['mobilePhoneNumber'] = phoneNumber;
+    user['realName'] = name;
+    await user.save();
   }
 
-  return user;
+  Future<dynamic> getUserData() async {
+
+    LCUser user = await LCUser.getCurrent();
+    dynamic currentUser;
+    try {
+      Map<String, dynamic> userMap = await LCCloud.run('queryUsers');
+      List<dynamic> users = userMap['result'];
+
+      for (var obj in users) {
+        if (obj['objectId'] == user.objectId) {
+          currentUser = obj;
+          return currentUser;
+        }
+      }
+    } on LCException catch (e) {
+      showToastRed(e.message);
+    }
+
+    return user;
+  }
+
 }

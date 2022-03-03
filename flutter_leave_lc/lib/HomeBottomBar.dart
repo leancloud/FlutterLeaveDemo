@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapplc/Common/Global.dart';
+import 'package:flutterapplc/Setting.dart';
 import 'package:flutterapplc/WeeklySummary.dart';
 import 'package:flutterapplc/WeeklyTabbar.dart';
 import 'LeavePage.dart';
@@ -25,6 +26,7 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
     LeaveTabPage(),
     WeeklyTabBarPage(),
     ContactsPage(),
+    SettingPage(),
   ];
 
   @override
@@ -110,6 +112,7 @@ class _HomeBottomBarPageState extends State<HomeBottomBarPage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.event_note), title: Text('周报')),
           BottomNavigationBarItem(icon: Icon(Icons.phone), title: Text('联系人')),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), title: Text('反馈')),
         ],
         currentIndex: this._currentIndex,
         fixedColor: Colors.blue,

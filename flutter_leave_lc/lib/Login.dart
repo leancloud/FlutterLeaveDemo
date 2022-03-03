@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapplc/Privacy.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'HomeBottomBar.dart';
 import 'SignUp.dart';
 import 'Common/Global.dart';
 import 'package:leancloud_storage/leancloud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+import 'package:leancloud_official_plugin/leancloud_plugin.dart';
+
+import 'UserProtocol.dart';
 
 //Todo 游客可以注册登录，LeanCloud 员工不必注册
 
@@ -21,6 +27,9 @@ class _LoginPageState extends State<LoginPage> {
   String _userName, _password;
   bool _isObscure = true;
   Color _eyeColor;
+  bool _userProtocolSelected = false;
+  bool _privacySelected = false;
+
 
   @override
   void initState() {
@@ -92,6 +101,8 @@ class _LoginPageState extends State<LoginPage> {
                 buildPasswordTextField(context),
                 buildForgetPasswordText(context),
                 SizedBox(height: 60.0),
+                buildUserProtocol(context),
+                buildPrivacy(context),
                 buildLoginButton(context),
                 SizedBox(height: 30.0),
                 buildRegisterText(context),
@@ -151,7 +162,11 @@ class _LoginPageState extends State<LoginPage> {
             if (_formKey.currentState.validate()) {
               //只有输入的内容符合要求通过才会到达此处
               _formKey.currentState.save();
-              userLogin(_userName, _password);
+              if (!_privacySelected || !_userProtocolSelected ) {
+                showToastRed('未同意用户使用协议或者隐私政策');
+              } else {
+                userLogin(_userName, _password);
+              }
             }
           },
           shape: StadiumBorder(side: BorderSide()),
@@ -269,9 +284,84 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ));
   }
-
+  Padding buildPrivacy(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+            value: _privacySelected,
+            activeColor: Colors.blue, //选中时的颜色
+            onChanged: (value) {
+              setState(() {
+                _privacySelected = value;
+              });
+            },
+          ),
+          GestureDetector(
+            child: Text(
+              '我已阅读并同意隐私政策',
+              style: TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+                fontSize: 15.0,
+              ),
+            ),
+            onTap: () => showPrivacyPage(),
+          )
+        ],
+      ),
+    );
+  }
+  Padding buildUserProtocol(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+            value: _userProtocolSelected,
+            activeColor: Colors.blue, //选中时的颜色
+            onChanged: (value) {
+              setState(() {
+                _userProtocolSelected = value;
+              });
+            },
+          ),
+          GestureDetector(
+            child: Text(
+              '我已阅读并同意用户使用协议',
+              style: TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+                fontSize: 15.0,
+              ),
+            ),
+            onTap: () => showUserProtocolPage(),
+          )
+        ],
+      ),
+    );
+  }
   Future login(String name, String password) async {
     LCUser user = await LCUser.login(name, password);
+  }
+  showUserProtocolPage() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new UserProtocolPage(),
+      ),
+    );
+  }
+  showPrivacyPage() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new PrivacyPage(),
+      ),
+    );
   }
 
   Future initLeanCloud() async {
